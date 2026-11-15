@@ -1,0 +1,17 @@
+{{- $pages := where .Site.RegularPages "Type" "in" (default (slice "post") .Site.Params.mainSections) -}}
+[
+{{- $first := true -}}
+{{- range $pages }}
+  {{- if not $first }},{{ end -}}
+  {{- $first = false -}}
+  {
+    "title": {{ .Title | jsonify }},
+    "permalink": {{ .RelPermalink | jsonify }},
+    "summary": {{ .Summary | plainify | truncate 200 | jsonify }},
+    "content": {{ .Plain | jsonify }},
+    "section": {{ .Section | jsonify }},
+    "date": {{ .Date.Format "2006.01.02" | jsonify }},
+    "tags": {{ .Params.tags | default (slice) | jsonify }}
+  }
+{{- end }}
+]

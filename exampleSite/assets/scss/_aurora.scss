@@ -1,0 +1,45 @@
+// Minimal site-owned scheme for the exampleSite (tokens + icon only).
+// Fuller worked example with comments: sibling `_blogger.scss`.
+
+[data-theme="aurora"] {
+    --color-bg: #0b1220;
+    --color-bg-elevated: #121a2b;
+    --color-bg-muted: #1a2438;
+    --color-surface: #121a2b;
+    --color-border: #2a3a55;
+    --color-border-strong: #3d5275;
+
+    --color-text: #e8eef8;
+    --color-text-secondary: #b4c0d4;
+    --color-text-muted: #8490a8;
+    --color-text-inverse: #0b1220;
+
+    --color-accent: #7dd3fc;
+    --color-accent-hover: #bae6fd;
+    --color-accent-soft: rgba(125, 211, 252, 0.14);
+    --color-vermillion: #fb7185;
+    --color-vermillion-soft: rgba(251, 113, 133, 0.14);
+
+    --color-code-bg: #0a101c;
+    --color-code-text: #e8eef8;
+
+    --color-overlay: rgba(4, 8, 16, 0.82);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+
+    --radius-sm: 0.35rem;
+    --radius-md: 0.6rem;
+    --radius-lg: 0.9rem;
+    --chip-radius: 999px;
+
+    --font-sans: "Noto Sans JP", "Hiragino Sans", "Segoe UI", system-ui, sans-serif;
+    --font-serif: "Source Serif 4", "Noto Serif JP", Georgia, serif;
+
+    color-scheme: dark;
+}
+
+[data-theme-pref="aurora"] .theme-switcher .icon-aurora {
+    display: block;
+    color: #7dd3fc;
+}

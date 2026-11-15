@@ -1,0 +1,63 @@
+{{- $p := .Site.Params.sidebar -}}
+<div class="sidebar">
+  {{- if default true $p.showAuthor }}
+    {{- if or .Site.Params.author.name .Site.Params.author.bio .Site.Params.author.avatar }}
+  <div class="sidebar-block sidebar-block--author">
+    <div class="sidebar-author">
+      {{- partial "author-avatar.html" . -}}
+      {{- if default true $p.showAuthorName }}
+        {{- with .Site.Params.author.name }}
+        <p class="sidebar-author__name">{{ . }}</p>
+        {{- end }}
+      {{- end }}
+      {{- /* Bio, else site description (home tagline) as last-resort blurb */ -}}
+      {{- $bio := .Site.Params.author.bio | default .Site.Params.description -}}
+      {{- with $bio }}
+        <p class="sidebar-author__bio">{{ . }}</p>
+      {{- end }}
+    </div>
+  </div>
+    {{- end }}
+  {{- end }}
+
+  {{- if and (default true .Site.Params.search.enabled) (default true $p.showSearch) }}
+  <div class="sidebar-block">
+    <h2 class="sidebar-block__title">{{ i18n "sidebar.search" }}</h2>
+    {{- partial "search.html" . -}}
+  </div>
+  {{- end }}
+
+  {{- if default true $p.showCategories }}
+    {{- $cats := .Site.Taxonomies.categories -}}
+    {{- if $cats }}
+  <div class="sidebar-block">
+    <h2 class="sidebar-block__title">{{ i18n "sidebar.categories" }}</h2>
+    <div class="tag-cloud">
+      {{- $limit := default 12 $p.categoryLimit -}}
+      {{- range $i, $term := $cats.ByCount }}
+        {{- if lt $i $limit }}
+          <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="tag-count">{{ .Count }}</span></a>
+        {{- end }}
+      {{- end }}
+    </div>
+  </div>
+    {{- end }}
+  {{- end }}
+
+  {{- if default true $p.showTags }}
+    {{- $tags := .Site.Taxonomies.tags -}}
+    {{- if $tags }}
+  <div class="sidebar-block">
+    <h2 class="sidebar-block__title">{{ i18n "sidebar.tags" }}</h2>
+    <div class="tag-cloud">
+      {{- $limit := default 20 $p.tagLimit -}}
+      {{- range $i, $term := $tags.ByCount }}
+        {{- if lt $i $limit }}
+          <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="tag-count">{{ .Count }}</span></a>
+        {{- end }}
+      {{- end }}
+    </div>
+  </div>
+    {{- end }}
+  {{- end }}
+</div>

@@ -1,0 +1,28 @@
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    {{- $since := .Site.Params.footer.since -}}
+    {{- $year := now.Year -}}
+    <span class="site-footer__copy">
+      ©
+      {{- if and $since (gt $year $since) }}{{ $since }}–{{ $year }}{{ else }}{{ $year }}{{ end }}
+      {{ .Site.Title }}
+    </span>
+    {{- with .Site.Params.footer.customText }}
+    <span class="site-footer__message">{{ . | markdownify }}</span>
+    {{- end }}
+    {{- with .Site.Menus.social }}
+      <ul class="site-footer__social">
+        {{- range . }}
+          {{- $label := .Name -}}
+          {{- $href := .URL -}}
+          {{- $isExternal := or (hasPrefix $href "http://") (hasPrefix $href "https://") (hasPrefix $href "//") -}}
+          {{- with .Page }}
+            {{- $label = .Title -}}
+            {{- $href = .RelPermalink -}}
+          {{- end -}}
+          <li><a href="{{ $href }}"{{ if $isExternal }} rel="me noopener" target="_blank"{{ end }}>{{ $label }}</a></li>
+        {{- end }}
+      </ul>
+    {{- end }}
+  </div>
+</footer>

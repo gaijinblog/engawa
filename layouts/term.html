@@ -1,0 +1,62 @@
+{{ define "main" }}
+  {{- /*
+    Kind "term" — single category/tag page (/categories/demo/, /tags/markdown/).
+  */ -}}
+  {{- $desc := .Description | default .Params.description -}}
+  {{- $hasImage := false -}}
+  {{- $imgSrc := "" -}}
+  {{- $imgW := 0 -}}
+  {{- $imgH := 0 -}}
+  {{- with .Params.image }}
+    {{- $res := $.Resources.GetMatch . -}}
+    {{- if $res }}
+      {{- $thumb := $res.Fill "1600x640 Center" -}}
+      {{- $hasImage = true -}}
+      {{- $imgSrc = $thumb.RelPermalink -}}
+      {{- $imgW = $thumb.Width -}}
+      {{- $imgH = $thumb.Height -}}
+    {{- else }}
+      {{- $hasImage = true -}}
+      {{- $imgSrc = . | relURL -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $countLabel := i18n "taxonomies.posts" (dict "Count" (len .Pages)) -}}
+
+  <header class="term-header{{ if $hasImage }} term-header--has-image{{ end }}">
+    {{- if $hasImage }}
+      <div class="term-header__media" aria-hidden="true">
+        <img
+          src="{{ $imgSrc }}"
+          alt=""
+          {{- if $imgW }} width="{{ $imgW }}"{{ end }}
+          {{- if $imgH }} height="{{ $imgH }}"{{ end }}
+          loading="eager"
+        >
+      </div>
+    {{- end }}
+    <div class="term-header__body">
+      <div class="term-header__title-row">
+        <h1 class="term-header__title">{{ .Title }}</h1>
+        <span class="term-header__count">{{ $countLabel }}</span>
+      </div>
+      {{- with $desc }}
+        <p class="term-header__desc">{{ . | plainify }}</p>
+      {{- end }}
+      {{- with .Content }}
+        <div class="term-header__content prose">{{ . }}</div>
+      {{- end }}
+    </div>
+  </header>
+
+  {{- $paginator := .Paginate .Pages -}}
+  {{- if $paginator.Pages }}
+    <div class="post-list">
+      {{- range $paginator.Pages }}
+        {{- partial "post-summary.html" . -}}
+      {{- end }}
+    </div>
+    {{- partial "pagination.html" . -}}
+  {{- else }}
+    <p class="empty-state">{{ i18n "list.empty" }}</p>
+  {{- end }}
+{{ end }}

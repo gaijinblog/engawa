@@ -1,0 +1,106 @@
+{{ define "main" }}
+  {{- /*
+    Kind "taxonomy" — list of all terms (/categories/, /tags/).
+    (In modern Hugo this is taxonomy.html; terms.html is not selected.)
+  */ -}}
+  <header class="page-header">
+    <h1 class="page-header__title">{{ partial "taxonomy-title.html" . }}</h1>
+    {{- with .Content }}
+      <div class="page-header__desc prose">{{ . }}</div>
+    {{- end }}
+  </header>
+
+  {{- $terms := .Data.Terms.ByCount -}}
+  {{- if not $terms }}
+    <p class="empty-state">{{ i18n "list.empty" }}</p>
+  {{- else if eq .Data.Plural "categories" }}
+    <div class="category-cards">
+      {{- range $terms }}
+        {{- $term := . -}}
+        {{- $page := .Page -}}
+        {{- $hasImage := false -}}
+        {{- $imgSrc := "" -}}
+        {{- $imgW := 0 -}}
+        {{- $imgH := 0 -}}
+        {{- with $page.Params.image }}
+          {{- $res := $page.Resources.GetMatch . -}}
+          {{- if $res }}
+            {{- $thumb := $res.Fill "640x360 Center" -}}
+            {{- $hasImage = true -}}
+            {{- $imgSrc = $thumb.RelPermalink -}}
+            {{- $imgW = $thumb.Width -}}
+            {{- $imgH = $thumb.Height -}}
+          {{- else }}
+            {{- $hasImage = true -}}
+            {{- $imgSrc = . | relURL -}}
+          {{- end -}}
+        {{- end -}}
+        {{- $desc := $page.Description | default $page.Params.description -}}
+        {{- $initial := $page.Title | plainify | truncate 1 "" -}}
+        <a
+          class="category-card{{ if $hasImage }} category-card--has-image{{ else }} category-card--no-image{{ end }}"
+          href="{{ $page.RelPermalink }}"
+        >
+          <div class="category-card__media" aria-hidden="true">
+            {{- if $hasImage }}
+              <img
+                src="{{ $imgSrc }}"
+                alt=""
+                {{- if $imgW }} width="{{ $imgW }}"{{ end }}
+                {{- if $imgH }} height="{{ $imgH }}"{{ end }}
+                loading="lazy"
+              >
+            {{- else }}
+              <span class="category-card__mark">{{ $initial | upper }}</span>
+            {{- end }}
+          </div>
+          <div class="category-card__body">
+            <h2 class="category-card__title">{{ $page.Title }}</h2>
+            {{- with $desc }}
+              <p class="category-card__desc">{{ . | plainify | truncate 160 }}</p>
+            {{- end }}
+            <span class="category-card__count">
+              {{ i18n "taxonomies.posts" (dict "Count" $term.Count) }}
+            </span>
+          </div>
+        </a>
+      {{- end }}
+    </div>
+
+  {{- else if eq .Data.Plural "tags" }}
+    {{- $max := 1 -}}
+    {{- range $terms }}
+      {{- if gt .Count $max }}{{ $max = .Count }}{{ end -}}
+    {{- end -}}
+    <div class="terms-cloud" role="list">
+      {{- range $terms }}
+        {{- $w := 40 -}}
+        {{- if gt $max 0 }}
+          {{- $w = div (mul .Count 100) $max -}}
+        {{- end -}}
+        {{- if lt $w 28 }}{{ $w = 28 }}{{ end -}}
+        <a
+          class="terms-cloud__tag"
+          role="listitem"
+          href="{{ .Page.RelPermalink }}"
+          style="--w: {{ $w }}"
+        >
+          <span class="terms-cloud__name">{{ .Page.Title }}</span>
+          <span class="terms-cloud__count">{{ .Count }}</span>
+        </a>
+      {{- end }}
+    </div>
+
+  {{- else }}
+    <ul class="taxonomy-list">
+      {{- range $terms }}
+      <li>
+        <a href="{{ .Page.RelPermalink }}">
+          <span>{{ .Page.Title }}</span>
+          <span class="count">{{ .Count }}</span>
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  {{- end }}
+{{ end }}

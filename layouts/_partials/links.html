@@ -1,0 +1,36 @@
+{{- /*
+  Friend / resource links from page front matter:
+  links:
+    - title: …
+      description: …
+      website: …
+      image: …  # local page resource or absolute URL
+*/ -}}
+{{- with .Params.links }}
+<div class="link-grid">
+  {{- range . }}
+  <a class="link-card" href="{{ .website }}" target="_blank" rel="noopener noreferrer">
+    {{- $img := .image -}}
+    {{- if $img }}
+      {{- $res := $.Resources.GetMatch $img -}}
+      <span class="link-card__thumb">
+        {{- if $res }}
+          {{- $thumb := $res.Fill "120x120 Center" -}}
+          <img src="{{ $thumb.RelPermalink }}" alt="" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" loading="lazy">
+        {{- else }}
+          <img src="{{ $img | safeURL }}" alt="" loading="lazy" width="60" height="60">
+        {{- end }}
+      </span>
+    {{- end }}
+    <span class="link-card__body">
+      <span class="link-card__title">{{ .title }}</span>
+      {{- with .description }}
+        <span class="link-card__desc">{{ . }}</span>
+      {{- else }}
+        <span class="link-card__desc">{{ .website }}</span>
+      {{- end }}
+    </span>
+  </a>
+  {{- end }}
+</div>
+{{- end -}}

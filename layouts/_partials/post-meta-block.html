@@ -1,0 +1,80 @@
+{{- /*
+  Full post meta panel (single post only): date, categories, reading time, tags, languages.
+  Reading time falls back to another translation when this page’s WordCount is empty
+  (placeholder translations often have RT=0).
+
+  Facts row layout (CSS): date left · categories center · reading time right.
+  When space is tight, the whole categories group wraps as one unit to the next line.
+*/ -}}
+{{- $format := default "2006.01.02" .Site.Params.article.dateFormat -}}
+{{- $cats := .GetTerms "categories" -}}
+{{- $tags := .GetTerms "tags" -}}
+{{- $alts := slice -}}
+{{- range .AllTranslations -}}
+  {{- if ne .Lang $.Lang -}}
+    {{- $alts = $alts | append . -}}
+  {{- end -}}
+{{- end -}}
+{{- $rt := .ReadingTime -}}
+{{- if not $rt -}}
+  {{- range .AllTranslations -}}
+    {{- if and (not $rt) (gt .ReadingTime 0) -}}
+      {{- $rt = .ReadingTime -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $showRT := and (default true .Site.Params.article.showReadingTime) (gt $rt 0) -}}
+{{- if or .Date $cats $showRT $tags $alts }}
+<div class="post-meta-block">
+  {{- if or .Date $cats $showRT }}
+  <div class="post-meta-block__facts">
+    {{- with .Date }}
+    <span class="post-meta-block__item post-meta-block__item--date">
+      <time datetime="{{ .Format "2006-01-02" }}">{{ .Format $format }}</time>
+    </span>
+    {{- end }}
+
+    {{- with $cats }}
+    <span class="post-meta-block__cats">
+      {{- range $i, $cat := . }}
+        {{- if $i }}<span class="post-meta-block__cats-sep" aria-hidden="true">·</span>{{- end }}
+      <a class="post-meta-block__cat" href="{{ $cat.RelPermalink }}">{{ $cat.LinkTitle }}</a>
+      {{- end }}
+    </span>
+    {{- end }}
+
+    {{- if $showRT }}
+    <span class="post-meta-block__item post-meta-block__item--rt">
+      {{ i18n "article.readingTime" (dict "Count" $rt) }}
+    </span>
+    {{- end }}
+  </div>
+  {{- end }}
+
+  {{- with $tags }}
+  <div class="post-meta-block__tags">
+    <span class="post-meta-block__label">{{ i18n "article.tags" }}</span>
+    <ul class="post-meta-block__chips">
+      {{- range . }}
+      <li><a class="post-meta-block__chip" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a></li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+
+  {{- with $alts }}
+  <div class="post-meta-block__langs">
+    <span class="post-meta-block__label">{{ i18n "article.translations" }}</span>
+    <ul class="post-meta-block__chips">
+      {{- range . }}
+      <li>
+        <a class="post-meta-block__chip post-meta-block__chip--lang" href="{{ .RelPermalink }}" hreflang="{{ .Lang }}">
+          {{ with .Language.Label }}{{ . }}{{ else }}{{ .Lang | upper }}{{ end }}
+        </a>
+      </li>
+      {{- end }}
+    </ul>
+  </div>
+  {{- end }}
+</div>
+{{- end }}

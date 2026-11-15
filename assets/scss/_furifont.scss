@@ -1,0 +1,142 @@
+// Furifont — furigana-in-font, scoped to user content only.
+// Active when html[data-furigana="hiragana"|"romaji"]. UI chrome stays on normal fonts.
+
+@font-face {
+    font-family: "Furifont Sans";
+    src: url("/fonts/furifont/FurifontSansVF.woff2") format("woff2");
+    font-weight: 250 900;
+    font-display: swap;
+    ascent-override: 88%;
+    descent-override: 12%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: "Furifont Sans Romaji";
+    src: url("/fonts/furifont/FurifontSansRomajiVF.woff2") format("woff2");
+    font-weight: 250 900;
+    font-display: swap;
+    ascent-override: 88%;
+    descent-override: 12%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: "Furifont Serif";
+    src: url("/fonts/furifont/FurifontSerifVF.woff2") format("woff2");
+    font-weight: 250 900;
+    font-display: swap;
+    ascent-override: 88%;
+    descent-override: 12%;
+    line-gap-override: 0%;
+}
+
+@font-face {
+    font-family: "Furifont Serif Romaji";
+    src: url("/fonts/furifont/FurifontSerifRomajiVF.woff2") format("woff2");
+    font-weight: 250 900;
+    font-display: swap;
+    ascent-override: 88%;
+    descent-override: 12%;
+    line-gap-override: 0%;
+}
+
+html[data-furigana="hiragana"][data-furifont-family="sans"] {
+    --furifont-cjk: "Furifont Sans";
+}
+html[data-furigana="hiragana"][data-furifont-family="serif"] {
+    --furifont-cjk: "Furifont Serif";
+}
+html[data-furigana="romaji"][data-furifont-family="sans"] {
+    --furifont-cjk: "Furifont Sans Romaji";
+}
+html[data-furigana="romaji"][data-furifont-family="serif"] {
+    --furifont-cjk: "Furifont Serif Romaji";
+}
+
+// User-content scopes (prose + titles/names/descriptions) + main menu / header dropdowns.
+// Still not applied to meta block, TOC, sidebar section labels, taxonomy list titles, etc.
+$furigana-scopes: ".prose, .furigana-scope, .article-summary, .article-header__title, .term-header__title, .term-header__desc, .category-card__title, .category-card__desc, .terms-cloud__name, .post-summary__title, .post-summary__excerpt, .post-featured__title, .post-featured__excerpt, .post-nav__link .title, .link-card__title, .link-card__desc, .page-header__quote-text, .sidebar-author__bio, .tag-cloud > a, .site-nav a, .site-nav-mobile a, .header-bar__link, .site-header__actions .lang-switcher, .site-header__actions .theme-switcher, .site-header__actions .size-switcher, .site-header__actions .furigana-switcher";
+
+html[data-furigana="hiragana"] :is(#{$furigana-scopes}),
+html[data-furigana="romaji"] :is(#{$furigana-scopes}) {
+    // Furifont first so CJK uses furigana glyphs; Latin falls through from later faces
+    font-family: var(--furifont-cjk), var(--font-serif);
+    // Room for ruby inside the em box (plain value: a CSS max() here gets
+    // evaluated by the Sass transpiler)
+    line-height: 1.85;
+}
+
+html[data-furigana="hiragana"],
+html[data-furigana="romaji"] {
+    // Sans-leaning user bits + chrome menus keep the scheme’s sans role under Furifont
+    :is(
+        .category-card__title,
+        .category-card__desc,
+        .terms-cloud__name,
+        .tag-cloud > a,
+        .link-card__title,
+        .link-card__desc,
+        .site-nav a,
+        .site-nav-mobile a,
+        .header-bar__link,
+        .site-header__actions .lang-switcher,
+        .site-header__actions .theme-switcher,
+        .site-header__actions .size-switcher,
+        .site-header__actions .furigana-switcher
+    ) {
+        font-family: var(--furifont-cjk), var(--font-sans);
+    }
+
+    :is(
+        .article-header__title,
+        .term-header__title,
+        .post-summary__title,
+        .post-featured__title,
+        .post-nav__link .title,
+        .site-nav a,
+        .site-nav-mobile a,
+        .header-bar__link,
+        .site-header__actions .lang-switcher summary,
+        .site-header__actions .theme-switcher summary,
+        .site-header__actions .size-switcher summary,
+        .site-header__actions .furigana-switcher summary
+    ) {
+        line-height: 1.55;
+    }
+
+    // Okurigana salt picks (JS wraps runs in [data-furifont-salt])
+    [data-furifont-salt="1"] { font-feature-settings: "salt" 1; }
+    [data-furifont-salt="2"] { font-feature-settings: "salt" 2; }
+    [data-furifont-salt="3"] { font-feature-settings: "salt" 3; }
+    [data-furifont-salt="4"] { font-feature-settings: "salt" 4; }
+    [data-furifont-salt="5"] { font-feature-settings: "salt" 5; }
+    [data-furifont-salt="6"] { font-feature-settings: "salt" 6; }
+    [data-furifont-salt="7"] { font-feature-settings: "salt" 7; }
+    [data-furifont-salt="8"] { font-feature-settings: "salt" 8; }
+    [data-furifont-salt="9"] { font-feature-settings: "salt" 9; }
+    [data-furifont-salt="10"] { font-feature-settings: "salt" 10; }
+    [data-furifont-salt="11"] { font-feature-settings: "salt" 11; }
+    [data-furifont-salt="12"] { font-feature-settings: "salt" 12; }
+    [data-furifont-salt="13"] { font-feature-settings: "salt" 13; }
+    [data-furifont-salt="14"] { font-feature-settings: "salt" 14; }
+    [data-furifont-salt="15"] { font-feature-settings: "salt" 15; }
+
+    // Manual <ruby> must not double up with font furigana
+    .prose ruby,
+    .prose ruby *,
+    .furigana-scope ruby,
+    .furigana-scope ruby * {
+        font-feature-settings: "ss01";
+    }
+
+    // Keep counts / i18n chips plain inside otherwise-scoped links
+    .tag-cloud .tag-count,
+    .terms-cloud__count,
+    .category-card__count,
+    .term-header__count {
+        font-family: var(--font-sans);
+        font-feature-settings: "ss01";
+        line-height: inherit;
+    }
+}

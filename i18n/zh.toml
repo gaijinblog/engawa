@@ -1,0 +1,91 @@
+[nav]
+home = "首页"
+menu = "菜单"
+close = "关闭"
+
+[headerBar]
+label = "实用链接"
+
+[theme]
+toggle = "配色"
+auto = "跟随系统"
+light = "浅色"
+dark = "深色"
+
+[lang]
+label = "语言"
+switch = "切换语言"
+
+[list]
+continueReading = "继续阅读"
+empty = "暂无文章。"
+pageOf = "第 {{ .PageNumber }} / {{ .TotalPages }} 页"
+latest = "最新"
+
+[contentSize]
+label = "字号"
+compact = "小"
+comfort = "中"
+large = "大"
+
+[alert]
+note = "注意"
+tip = "提示"
+important = "重要"
+warning = "警告"
+caution = "谨慎"
+
+[article]
+postedOn = "发布"
+updatedOn = "更新"
+readingTime = "约 {{ .Count }} 分钟"
+readingTime_one = "约 {{ .Count }} 分钟"
+readingTime_other = "约 {{ .Count }} 分钟"
+tableOfContents = "目录"
+tags = "标签"
+categories = "分类"
+previous = "上一篇"
+next = "下一篇"
+related = "相关文章"
+translations = "其他语言"
+comments = "评论"
+
+[sidebar]
+about = "关于"
+search = "搜索"
+categories = "分类"
+tags = "标签"
+archives = "归档"
+
+[search]
+placeholder = "搜索…"
+noResults = "无结果"
+results = "结果"
+open = "搜索"
+
+[images]
+close = "关闭图片"
+previous = "上一张"
+next = "下一张"
+zoom = "放大查看"
+
+[footer]
+poweredBy = "由 {{ .Generator }} 构建"
+rights = "保留所有权利。"
+explore = "探索"
+recent = "最近文章"
+
+[notFound]
+title = "页面未找到"
+message = "该页面不存在或已移动。"
+home = "返回首页"
+
+[taxonomies]
+tags = "标签"
+categories = "分类"
+posts = "{{ .Count }} 篇文章"
+posts_one = "{{ .Count }} 篇文章"
+posts_other = "{{ .Count }} 篇文章"
+
+[archives]
+title = "归档"

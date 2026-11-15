@@ -1,0 +1,26 @@
+{{- /*
+  Compact meta for listings: date + reading time only.
+  Reading time falls back to another translation when this page has no countable content
+  (common for placeholder i18n stubs).
+*/ -}}
+{{- $format := default "2006.01.02" .Site.Params.article.dateFormat -}}
+{{- $rt := .ReadingTime -}}
+{{- if not $rt -}}
+  {{- range .AllTranslations -}}
+    {{- if and (not $rt) (gt .ReadingTime 0) -}}
+      {{- $rt = .ReadingTime -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $showRT := and (default true .Site.Params.article.showReadingTime) (gt $rt 0) -}}
+{{- if or .Date $showRT }}
+<div class="post-meta">
+  {{- with .Date }}
+  <time datetime="{{ .Format "2006-01-02" }}">{{ .Format $format }}</time>
+  {{- end }}
+  {{- if $showRT }}
+  <span class="post-meta__sep"></span>
+  <span>{{ i18n "article.readingTime" (dict "Count" $rt) }}</span>
+  {{- end }}
+</div>
+{{- end }}

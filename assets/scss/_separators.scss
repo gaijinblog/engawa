@@ -1,0 +1,347 @@
+// Dual separators — scheme-aware
+//
+// .sep-inner   — gentle break inside one unit (title/meta ↔ excerpt, tags row…)
+// .sep-context — real break between units (posts, sidebar blocks, page header ↔ list)
+//
+// Also available as edge helpers:
+//   .has-sep-inner   → decorative line on the bottom edge (via ::after)
+//   .has-sep-context → same, for context weight
+
+// ---------------------------------------------------------------------------
+// Tokens (light / default paper)
+// ---------------------------------------------------------------------------
+:root {
+    --sep-inner-h: 1px;
+    --sep-inner-gap: var(--space-3) 0 var(--space-4);
+    // Soft single rule — quieter than context
+    --sep-inner-bg: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--color-border) 8%,
+        var(--color-border) 92%,
+        transparent 100%
+    );
+
+    --sep-context-h: 3px;
+    --sep-context-gap: var(--space-5) 0;
+    // Classic engawa double rule (thin + thin)
+    --sep-context-bg:
+        linear-gradient(
+            to bottom,
+            var(--color-border-strong) 0,
+            var(--color-border-strong) 1px,
+            transparent 1px,
+            transparent 2px,
+            var(--color-border) 2px,
+            var(--color-border) 3px
+        );
+    --sep-context-ornament: none;
+}
+
+[data-theme="dark"] {
+    --sep-inner-bg: linear-gradient(
+        to right,
+        transparent 0%,
+        var(--color-border-strong) 10%,
+        var(--color-border-strong) 90%,
+        transparent 100%
+    );
+    --sep-context-h: 3px;
+    --sep-context-bg:
+        linear-gradient(
+            to bottom,
+            var(--color-border-strong) 0,
+            var(--color-border-strong) 1px,
+            transparent 1px,
+            transparent 2px,
+            rgba(126, 176, 208, 0.35) 2px,
+            rgba(126, 176, 208, 0.35) 3px
+        );
+}
+
+
+// ---------------------------------------------------------------------------
+// Standalone rules (use as <hr class="sep-inner|sep-context">)
+// ---------------------------------------------------------------------------
+.sep-inner,
+hr.sep-inner {
+    display: block;
+    border: 0;
+    height: var(--sep-inner-h);
+    margin: var(--sep-inner-gap);
+    padding: 0;
+    // Use longhands — `background:` shorthand can drop size/pos on multi-layer vars
+    background-color: transparent;
+    background-image: var(--sep-inner-bg);
+    background-repeat: no-repeat;
+    background-size: var(--sep-inner-bg-size, 100% 100%);
+    background-position: var(--sep-inner-bg-pos, center);
+    color: transparent;
+    overflow: hidden;
+}
+
+.sep-context,
+hr.sep-context {
+    display: block;
+    border: 0;
+    height: var(--sep-context-h);
+    margin: var(--sep-context-gap);
+    padding: 0;
+    background-color: transparent;
+    background-image: var(--sep-context-bg);
+    background-repeat: no-repeat;
+    background-size: var(--sep-context-bg-size, 100% 100%);
+    background-position: var(--sep-context-bg-pos, center);
+    color: transparent;
+    overflow: hidden;
+}
+
+// ---------------------------------------------------------------------------
+// Edge helpers — paint the decorative line on the bottom of a block
+// ---------------------------------------------------------------------------
+.has-sep-inner,
+.has-sep-context {
+    position: relative;
+    border-bottom: 0 !important;
+}
+
+.has-sep-inner::after,
+.has-sep-context::after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    background-repeat: no-repeat, no-repeat, no-repeat;
+}
+
+.has-sep-inner::after {
+    height: var(--sep-inner-h);
+    background-image: var(--sep-inner-bg);
+    background-size: var(--sep-inner-bg-size, 100% 100%);
+    background-position: var(--sep-inner-bg-pos, center);
+}
+
+.has-sep-context::after {
+    height: var(--sep-context-h);
+    background-image: var(--sep-context-bg);
+    background-size: var(--sep-context-bg-size, 100% 100%);
+    background-position: var(--sep-context-bg-pos, center);
+}
+
+// ---------------------------------------------------------------------------
+// Component wiring — replace uniform 1px borders with dual system
+// ---------------------------------------------------------------------------
+
+// Listings: between posts = context
+.post-summary {
+    border-bottom: 0;
+    position: relative;
+    padding-bottom: calc(var(--space-6) + var(--sep-context-h));
+
+    &:not(:last-child)::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-context-h);
+        background-image: var(--sep-context-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-context-bg-size, 100% 100%);
+        background-position: var(--sep-context-bg-pos, center);
+        pointer-events: none;
+    }
+
+    &:last-child {
+        padding-bottom: var(--space-6);
+    }
+}
+
+// Standalone sep under listing titles (title ↔ meta/body)
+.post-summary .sep-inner,
+.post-featured .sep-inner {
+    margin: var(--space-2) 0 var(--space-3);
+}
+
+// Page headers (taxonomy, section list, archives, home p2+) = context
+.page-header:not(.page-header--home-lead) {
+    border-bottom: 0;
+    position: relative;
+    padding-bottom: calc(var(--space-5) + var(--sep-context-h));
+    margin-bottom: var(--space-6);
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-context-h);
+        background-image: var(--sep-context-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-context-bg-size, 100% 100%);
+        background-position: var(--sep-context-bg-pos, center);
+        pointer-events: none;
+    }
+}
+
+// Sidebar blocks = same context separator family
+.sidebar-block {
+    border-bottom: 0;
+    position: relative;
+    padding-bottom: calc(var(--space-5) + var(--sep-context-h));
+
+    &:not(:last-child)::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-context-h);
+        background-image: var(--sep-context-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-context-bg-size, 100% 100%);
+        background-position: var(--sep-context-bg-pos, center);
+        pointer-events: none;
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+    }
+}
+
+
+// Archives: year headings = context; items = quiet inner
+// (also kill global h2 border / top-margin so only sep-context shows)
+.archives__year {
+    border-bottom: 0 !important;
+    position: relative;
+    padding-bottom: calc(var(--space-2) + var(--sep-context-h));
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-context-h);
+        background-image: var(--sep-context-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-context-bg-size, 100% 100%);
+        background-position: var(--sep-context-bg-pos, center);
+        pointer-events: none;
+    }
+}
+
+.archives__item {
+    border-bottom: 0;
+    position: relative;
+    padding-bottom: calc(var(--space-3) + var(--sep-inner-h));
+
+    &:not(:last-child)::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-inner-h);
+        background-image: var(--sep-inner-bg);
+        background-repeat: no-repeat;
+        background-size: var(--sep-inner-bg-size, 100% 100%);
+        background-position: var(--sep-inner-bg-pos, center);
+        pointer-events: none;
+    }
+}
+
+// Single post: tags/langs row inside meta block = inner
+.post-meta-block__tags,
+.post-meta-block__langs {
+    border-top: 0;
+    position: relative;
+    padding-top: calc(var(--space-3) + var(--sep-inner-h));
+
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: var(--sep-inner-h);
+        background-image: var(--sep-inner-bg);
+        background-repeat: no-repeat;
+        background-size: var(--sep-inner-bg-size, 100% 100%);
+        background-position: var(--sep-inner-bg-pos, center);
+        pointer-events: none;
+    }
+}
+
+// Article footer (prev/next zone) = context
+.article-footer {
+    border-top: 0;
+    position: relative;
+    padding-top: calc(var(--space-5) + var(--sep-context-h));
+
+    &::before {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: var(--sep-context-h);
+        background-image: var(--sep-context-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-context-bg-size, 100% 100%);
+        background-position: var(--sep-context-bg-pos, center);
+        pointer-events: none;
+    }
+}
+
+// Prose <hr> uses the context family (strong thematic break inside an article)
+.prose hr,
+hr:not(.sep-inner):not(.sep-context) {
+    border: 0;
+    height: var(--sep-context-h);
+    margin: var(--space-7) 0;
+    padding: 0;
+    background-color: transparent;
+    background-image: var(--sep-context-bg);
+    background-repeat: no-repeat, no-repeat, no-repeat;
+    background-size: var(--sep-context-bg-size, 100% 100%);
+    background-position: var(--sep-context-bg-pos, center);
+    color: transparent;
+}
+
+// Prose h2 underline = soft / inner family only.
+// Higher specificity so scheme chrome cannot re-add a CSS border-bottom under it.
+.prose h2,
+[data-theme] .prose h2 {
+    border-bottom: 0 !important;
+    position: relative;
+    padding-bottom: calc(var(--space-2) + var(--sep-inner-h));
+
+    &::after {
+        content: "";
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: var(--sep-inner-h);
+        background-color: transparent;
+        background-image: var(--sep-inner-bg);
+        background-repeat: no-repeat, no-repeat, no-repeat;
+        background-size: var(--sep-inner-bg-size, 100% 100%);
+        background-position: var(--sep-inner-bg-pos, center);
+        pointer-events: none;
+    }
+}

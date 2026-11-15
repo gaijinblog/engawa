@@ -1,0 +1,15 @@
+// Site extension point — color schemes owned by the *site* are imported here.
+//
+// The theme ships System / Light / Dark only. To add your own schemes:
+//   1. List them in site config, e.g.
+//        [colorScheme] schemes = ["light", "dark", "aurora"]
+//      (plus `darkish` if a scheme has a dark background — see params.toml).
+//   2. Create `assets/scss/_custom-schemes.scss` in the *site* — project assets
+//      override theme assets, so the site's copy replaces this stub — with one
+//      `@use "<name>";` line per scheme file.
+//   3. Each scheme file defines `[data-theme="<name>"]` tokens (colors, fonts,
+//      radii) plus any component overrides; they compile after every base
+//      component, so they always win.
+//   4. Optional: i18n `theme.<name>` and `layouts/partials/scheme-icons/<name>.html`.
+//
+// Details: README "Color schemes", docs/INTERNALS.md.

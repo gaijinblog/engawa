@@ -1,0 +1,85 @@
+// Comments + Disqus
+//
+// Disqus UI is only light or dark. We always wrap it in a solid panel so:
+// 1) patterned page backgrounds (moe dots, mecha grid, ajisai stripes) never show through
+// 2) Auto light/dark is driven by panel `color` + solid `background-color` (no alpha)
+// 3) padding keeps Disqus text off the edges
+//
+// Outer .comments__bay = scheme chrome (optional loud frame)
+// Inner .comments__panel = Disqus host (always solid + padded)
+
+.comments {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
+}
+
+.comments__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
+    border: 0;
+    padding: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Bay — default: quiet shell (light / dark / showa / ghost)
+// ---------------------------------------------------------------------------
+.comments__bay {
+    box-sizing: border-box;
+    // Quiet single-frame look: bay is transparent, panel carries border
+    padding: 0;
+    background: transparent;
+    border: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Panel — solid Disqus host (default = light UI)
+// ---------------------------------------------------------------------------
+.comments__panel {
+    box-sizing: border-box;
+    // Room so Disqus chrome never touches the frame
+    padding: var(--space-5) var(--space-6);
+    min-height: 8rem;
+    background-color: #ffffff;
+    color: #1c1917;
+    color-scheme: light;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+
+    @media (max-width: 639px) {
+        padding: var(--space-4);
+    }
+}
+
+// Embed fills panel; host inherits panel colors
+.comments__thread,
+#disqus_thread {
+    min-height: 8rem;
+    margin: 0;
+    background-color: transparent;
+    color: inherit;
+    color-scheme: inherit;
+}
+
+#disqus_thread a {
+    color: var(--color-accent);
+}
+
+// ---------------------------------------------------------------------------
+// Dark plain schemes — solid dark panel, quiet border (no double “gift box”)
+// ---------------------------------------------------------------------------
+[data-theme="dark"] {
+    .comments__panel {
+        background-color: #1e1b18;
+        color: #e8e4dc;
+        color-scheme: dark;
+        border-color: var(--color-border);
+    }
+}
+

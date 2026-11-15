@@ -1,0 +1,7 @@
+{{ define "main" }}
+  <div class="not-found">
+    <h1 class="not-found__title">{{ i18n "notFound.title" }}</h1>
+    <p class="not-found__message">{{ i18n "notFound.message" }}</p>
+    <a class="not-found__link" href="{{ "/" | relLangURL }}">{{ i18n "notFound.home" }} →</a>
+  </div>
+{{ end }}

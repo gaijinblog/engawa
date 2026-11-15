@@ -1,0 +1,156 @@
+// Engawa design tokens — paper, ink, indigo (藍), quiet vermillion (朱)
+
+:root {
+    // Surfaces
+    --color-bg: #f7f4ef;
+    --color-bg-elevated: #fffcf7;
+    --color-bg-muted: #efe9e0;
+    --color-surface: #fffcf7;
+    --color-border: #e7e0d6;
+    --color-border-strong: #d4ccc0;
+
+    // Text
+    --color-text: #1c1917;
+    --color-text-secondary: #57534e;
+    --color-text-muted: #78716c;
+    --color-text-inverse: #f7f4ef;
+
+    // Accents
+    --color-accent: #3d5a80;
+    --color-accent-hover: #2c4260;
+    --color-accent-soft: rgba(61, 90, 128, 0.12);
+    --color-vermillion: #c45c48;
+    --color-vermillion-soft: rgba(196, 92, 72, 0.12);
+
+    // Code
+    --color-code-bg: #efe9e0;
+    --color-code-text: #292524;
+
+    // Overlay
+    --color-overlay: rgba(28, 25, 23, 0.72);
+
+    // Shadows
+    --shadow-sm: 0 1px 2px rgba(28, 25, 23, 0.04);
+    --shadow-md: 0 4px 16px rgba(28, 25, 23, 0.06);
+
+    // Type
+    --font-sans: "Noto Sans JP", "Hiragino Sans", "Hiragino Kaku Gothic ProN",
+        "Segoe UI", system-ui, -apple-system, sans-serif;
+    --font-serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype",
+        Palatino, "Noto Serif JP", Georgia, serif;
+    --font-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1.125rem; // 18px
+    --text-lg: 1.25rem;
+    --text-xl: 1.5rem;
+    --text-2xl: 1.875rem;
+    --text-3xl: 2.25rem;
+
+    --leading-tight: 1.35;
+    --leading-normal: 1.6;
+    --leading-relaxed: 1.75;
+
+    --measure: 42rem; // ~65–72ch at 18px
+    --content-width: 42rem;
+    --layout-max: 68rem;
+    --sidebar-width: 16.5rem;
+
+    // Space
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 2.5rem;
+    --space-8: 3.5rem;
+    --space-9: 5rem;
+
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    // Tag / meta chips (overridden per gimmick scheme: square, soft square, pill…)
+    --chip-radius: 999px;
+
+    // Main header taller than utility bar; both scale with content-size
+    --header-height: 4.5rem;
+    --header-bar-height: 3.35rem;
+    // Total fixed chrome height (main only by default; + utility bar via :has below)
+    --header-stack-height: var(--header-height);
+    --transition: 160ms ease;
+
+    color-scheme: light;
+}
+
+// Header stack is a sibling of .site — set stack height on the document so padding/sticky inherit
+html:has(.site-header-stack--with-bar) {
+    --header-stack-height: calc(var(--header-height) + var(--header-bar-height));
+}
+
+// Content size scale — prose + chrome (header / footer / sidebar use --text-xs/sm too)
+[data-content-size="comfort"] {
+    --text-xs: 0.8125rem;   // 13px
+    --text-sm: 0.9375rem;   // 15px
+    --text-base: 1.25rem;
+    --text-lg: 1.35rem;
+    --text-xl: 1.6rem;
+    --text-2xl: 2rem;
+    --text-3xl: 2.4rem;
+    --measure: 44rem;
+    --header-height: 4.75rem;
+    --header-bar-height: 3.55rem;
+    --sidebar-width: 17.5rem;
+}
+
+[data-content-size="large"] {
+    --text-xs: 0.875rem;    // 14px
+    --text-sm: 1rem;        // 16px
+    --text-base: 1.375rem;
+    --text-lg: 1.5rem;
+    --text-xl: 1.75rem;
+    --text-2xl: 2.15rem;
+    --text-3xl: 2.55rem;
+    --measure: 46rem;
+    --leading-relaxed: 1.8;
+    --header-height: 5.1rem;
+    --header-bar-height: 3.75rem;
+    --sidebar-width: 18.5rem;
+}
+
+[data-theme="dark"] {
+    --color-bg: #161412;
+    --color-bg-elevated: #1e1b18;
+    --color-bg-muted: #24201c;
+    --color-surface: #1e1b18;
+    --color-border: #2a2622;
+    --color-border-strong: #3d3732;
+
+    --color-text: #e8e4dc;
+    --color-text-secondary: #c4beb4;
+    --color-text-muted: #a8a29e;
+    --color-text-inverse: #161412;
+
+    --color-accent: #7eb0d0;
+    --color-accent-hover: #9bc4de;
+    --color-accent-soft: rgba(126, 176, 208, 0.14);
+    --color-vermillion: #e07a66;
+    --color-vermillion-soft: rgba(224, 122, 102, 0.14);
+
+    --color-code-bg: #24201c;
+    --color-code-text: #e8e4dc;
+
+    --color-overlay: rgba(8, 7, 6, 0.82);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+
+    color-scheme: dark;
+}
+
+
+// Breakpoints (use in media queries)
+// sm: 640px, md: 768px, lg: 960px, xl: 1200px
+
+

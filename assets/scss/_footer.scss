@@ -1,0 +1,207 @@
+.site-footer {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+    margin-top: auto;
+    // Sized relative to the footer strip (not the whole viewport).
+    container-type: inline-size;
+    container-name: site-footer;
+}
+
+// Wide: copyright left · message center · menu right.
+// Narrow: stacked + centered, visual order reversed (menu → message → copyright).
+.site-footer__inner {
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-5);
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--space-2) var(--space-5);
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.site-footer__copy,
+.site-footer__message {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    line-height: 1.45;
+}
+
+.site-footer__copy {
+    flex: 0 1 auto;
+    color: var(--color-text-muted);
+}
+
+.site-footer__message {
+    flex: 1 1 auto;
+    text-align: center;
+    color: var(--color-text-secondary);
+
+    // markdownify may wrap a <p> — keep the block compact
+    p {
+        margin: 0;
+        display: inline;
+    }
+
+    a {
+        color: var(--color-accent);
+    }
+}
+
+.site-footer a {
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    &:hover {
+        color: var(--color-accent);
+    }
+}
+
+.site-footer__social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: max-content;
+    max-width: 100%;
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    box-sizing: border-box;
+}
+
+// When only copy + social (no message), pin ends.
+.site-footer__inner:not(:has(.site-footer__message)) {
+    .site-footer__social {
+        margin-left: auto;
+    }
+}
+
+// Stacked: reverse DOM order so menu sits on top, copyright at the bottom.
+// column-reverse + DOM [copy, message, menu] → visual [menu, message, copy].
+@container site-footer (max-width: 40rem) {
+    .site-footer__inner {
+        flex-direction: column-reverse;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-3);
+        text-align: center;
+    }
+
+    .site-footer__copy,
+    .site-footer__message {
+        flex: 0 1 auto;
+        text-align: center;
+        margin: 0;
+    }
+
+    .site-footer__social {
+        justify-content: center;
+        margin: 0;
+    }
+
+    .site-footer__inner:not(:has(.site-footer__message)) .site-footer__social {
+        margin-left: 0;
+    }
+}
+
+// Secondary wide footer (no-sidebar pages)
+.footer-secondary {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+}
+
+.footer-secondary__inner {
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-5);
+    display: grid;
+    gap: var(--space-7);
+
+    @media (min-width: 720px) {
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-8);
+    }
+}
+
+.footer-secondary__title {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-4);
+    border: 0;
+    padding: 0;
+}
+
+.footer-secondary__title--sub {
+    margin-top: var(--space-6);
+}
+
+.footer-secondary__empty {
+    margin: 0;
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    font-family: var(--font-sans);
+}
+
+.tag-cloud--wide a {
+    font-size: var(--text-sm);
+    padding: 0.3em 0.7em;
+}
+
+.footer-secondary__posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+
+    a {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: var(--space-2) var(--space-4);
+        padding: var(--space-3) 0;
+        text-decoration: none;
+        font-family: var(--font-sans);
+
+        &:hover {
+            .title {
+                color: var(--color-accent);
+            }
+        }
+    }
+
+    .title {
+        color: var(--color-text);
+        font-size: var(--text-sm);
+        line-height: var(--leading-tight);
+        flex: 1 1 12rem;
+    }
+
+    time {
+        color: var(--color-text-muted);
+        font-size: var(--text-xs);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+}
+

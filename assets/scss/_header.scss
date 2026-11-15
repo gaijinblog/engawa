@@ -1,0 +1,403 @@
+// Sticky chrome stack (stays in document flow). Content may scroll under translucent
+// headers (nice on Ghost); sidebar uses --header-stack-height so it never sticks under them.
+.site-header-stack {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.site-header {
+    position: relative;
+    background: color-mix(in srgb, var(--color-bg) 92%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.site-header__inner {
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: 0 var(--space-5);
+    height: var(--header-height);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    min-width: 0;
+    box-sizing: border-box;
+    // Decorative theme fonts can make chrome wider; never spill past the viewport.
+    overflow-x: clip;
+}
+
+.site-brand {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    flex-shrink: 0;
+    white-space: nowrap;
+
+    &:hover {
+        color: var(--color-accent);
+        text-decoration: none;
+    }
+}
+
+.site-nav {
+    display: none;
+    flex: 1;
+    align-items: center;
+    gap: var(--space-1);
+    margin-left: var(--space-4);
+
+    @media (min-width: 768px) {
+        display: flex;
+    }
+
+    a {
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        font-size: var(--text-sm);
+        font-family: var(--font-sans);
+        padding: var(--space-2) var(--space-3);
+        border-radius: var(--radius-sm);
+        transition: background var(--transition), color var(--transition);
+
+        &:hover,
+        &.is-active {
+            color: var(--color-text);
+            background: var(--color-bg-muted);
+            text-decoration: none;
+        }
+    }
+}
+
+.site-header__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-left: auto;
+    flex-shrink: 0;
+    min-width: 0;
+}
+
+.icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25em;
+    height: 2.25em;
+    font-size: var(--text-sm);
+    border-radius: var(--radius-md);
+    color: var(--color-text-secondary);
+    border: 1px solid transparent;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+
+    &:hover {
+        background: var(--color-bg-muted);
+        color: var(--color-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    svg {
+        width: 1.15em;
+        height: 1.15em;
+    }
+}
+
+// Mobile menu toggle
+.nav-toggle {
+    @media (min-width: 768px) {
+        display: none;
+    }
+}
+
+// Mobile drawer nav
+.site-nav-mobile {
+    display: none;
+    border-top: 1px solid var(--color-border);
+    background: var(--color-bg);
+    padding: var(--space-3) var(--space-5) var(--space-4);
+
+    &.is-open {
+        display: block;
+    }
+
+    @media (min-width: 768px) {
+        display: none !important;
+    }
+
+    a {
+        display: block;
+        padding: var(--space-3) 0;
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        font-size: var(--text-sm);
+        border-bottom: 1px solid var(--color-border);
+
+        &:last-child {
+            border-bottom: 0;
+        }
+
+        &:hover,
+        &.is-active {
+            color: var(--color-accent);
+        }
+    }
+}
+
+// Language switcher
+.lang-switcher {
+    position: relative;
+
+    summary {
+        list-style: none;
+        cursor: pointer;
+        font-size: var(--text-xs);
+        font-family: var(--font-sans);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-secondary);
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: var(--color-surface);
+        white-space: nowrap;
+        line-height: 1.25;
+
+        &::-webkit-details-marker {
+            display: none;
+        }
+
+        &:hover {
+            border-color: var(--color-border-strong);
+            color: var(--color-text);
+        }
+    }
+
+    &[open] summary {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    // Shared panel for lang / theme / size / furigana (all use this class).
+    .lang-switcher__menu {
+        position: absolute;
+        right: 0;
+        top: calc(100% + 0.35rem);
+        min-width: 8rem;
+        width: max-content;
+        display: flex;
+        flex-direction: column;
+        // Space between items so active/hover backgrounds don't merge when
+        // corners are rounded (size / furigana / lang / theme menus).
+        gap: 0.2rem;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        padding: var(--space-2);
+        z-index: 50;
+
+        // Links (lang) and buttons (theme / size / furigana) share one item recipe.
+        a,
+        button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--text-sm);
+            font-family: var(--font-sans);
+            color: var(--color-text-secondary);
+            border-radius: var(--radius-sm);
+            background: none;
+            border: 0;
+            cursor: pointer;
+            white-space: nowrap;
+            text-decoration: none;
+            transition: background var(--transition), color var(--transition);
+
+            &:hover,
+            &.is-active {
+                background: var(--color-bg-muted);
+                color: var(--color-text);
+                text-decoration: none;
+            }
+
+            &.is-active {
+                color: var(--color-accent);
+                font-weight: 600;
+            }
+
+            &:focus-visible {
+                outline: 2px solid var(--color-accent);
+                outline-offset: 1px;
+            }
+        }
+    }
+}
+
+// Theme dropdown — summary shows icon matching current resolved theme
+.theme-switcher {
+    summary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        max-width: 9.5rem;
+    }
+
+    .theme-switcher__icon {
+        display: inline-flex;
+        width: 1rem;
+        height: 1rem;
+        flex-shrink: 0;
+
+        svg {
+            width: 1rem;
+            height: 1rem;
+            display: none;
+        }
+    }
+
+    .theme-switcher__label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 6.5rem;
+    }
+
+    // Very short chrome (below mobile nav at 768px): summary = icon only.
+    // Dropdown options still show full scheme names. aria-label / title stay on <summary>.
+    @media (max-width: 480px) {
+        summary {
+            gap: 0;
+            max-width: none;
+            // Match icon-btn footprint so the row stays balanced
+            padding: var(--space-2);
+            min-width: 2.25em;
+            min-height: 2.25em;
+            justify-content: center;
+        }
+
+        .theme-switcher__label {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+    }
+}
+
+// Icon in summary matches preference / resolved mode
+// Pref auto → half-sun; light → sun; dark → moon; site schemes → their icon-* CSS
+[data-theme-pref="auto"] .theme-switcher .icon-auto {
+    display: block;
+}
+
+[data-theme-pref="light"] .theme-switcher .icon-sun {
+    display: block;
+}
+
+[data-theme-pref="dark"] .theme-switcher .icon-moon {
+    display: block;
+}
+
+
+// Fallback if pref missing: use resolved theme
+html:not([data-theme-pref]) [data-theme="light"] .theme-switcher .icon-sun,
+html:not([data-theme-pref]) [data-theme="dark"] .theme-switcher .icon-moon {
+    display: block;
+}
+
+// ---------------------------------------------------------------------------
+// Second header bar — discreet utility row (same quiet language as site-footer)
+// params.headerBar.enabled + Menus.headerbar
+// ---------------------------------------------------------------------------
+.header-bar {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-elevated);
+    font-family: var(--font-sans);
+}
+
+.header-bar__inner {
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: 0.55rem var(--space-5);
+    display: flex;
+    align-items: center;
+    min-height: var(--header-bar-height);
+    box-sizing: border-box;
+}
+
+.header-bar__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    line-height: 1.4;
+}
+
+.header-bar__item {
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+// Plain text links like .site-footer a / .site-footer__social — no chip chrome
+.header-bar__link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    font-size: var(--text-sm);
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    transition: color var(--transition);
+
+    &:hover {
+        color: var(--color-accent);
+        background: none;
+        text-decoration: none;
+    }
+
+    &.is-active {
+        color: var(--color-text-secondary);
+        font-weight: 500;
+        background: none;
+        border: 0;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
+    }
+}
+
+.header-bar__link--external::after {
+    content: "↗";
+    margin-left: 0.35em;
+    font-size: 0.8em;
+    opacity: 0.45;
+    line-height: 1;
+}
+

@@ -1,0 +1,29 @@
+# Engawa exampleSite — run from this folder:
+#   hugo server --themesDir ../..
+# (expects this theme at <parent>/themes/hugo-theme-engawa)
+
+baseURL                = "https://example.org/"
+title                  = "Engawa Demo"
+theme                  = "hugo-theme-engawa"
+defaultContentLanguage = "en"
+enableRobotsTXT        = true
+summaryLength          = 40
+
+[pagination]
+    pagerSize = 10
+
+[permalinks]
+    post = "/p/:slug/"
+    page = "/:slug/"
+
+[services.disqus]
+    # Placeholder — on localhost the theme shows a Disqus stub instead of loading.
+    shortname = "engawa-demo"
+
+# Required: merge the theme's markup.toml (goldmark / TOC / Chroma).
+[markup]
+    _merge = "deep"
+
+[taxonomies]
+    category = "categories"
+    tag      = "tags"

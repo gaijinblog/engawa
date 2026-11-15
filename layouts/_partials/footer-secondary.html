@@ -1,0 +1,60 @@
+{{- /*
+  Wide secondary footer when page has no sidebar.
+  Left: categories then tags clouds; right: recent posts.
+  Never duplicated with sidebar taxonomies.
+*/ -}}
+{{- $format := default "2006.01.02" .Site.Params.article.dateFormat -}}
+{{- $posts := where .Site.RegularPages "Type" "in" (default (slice "post") .Site.Params.mainSections) -}}
+{{- $recent := first 6 $posts -}}
+{{- $tags := .Site.Taxonomies.tags -}}
+{{- $cats := .Site.Taxonomies.categories -}}
+<section class="footer-secondary" aria-label="{{ i18n "footer.explore" }}">
+  <div class="footer-secondary__inner">
+    <div class="footer-secondary__col">
+      <h2 class="footer-secondary__title">{{ i18n "sidebar.categories" }}</h2>
+      {{- if $cats }}
+      <div class="tag-cloud tag-cloud--wide">
+        {{- $climit := default 16 .Site.Params.sidebar.categoryLimit -}}
+        {{- range $i, $term := $cats.ByCount }}
+          {{- if lt $i $climit }}
+            <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="tag-count">{{ .Count }}</span></a>
+          {{- end }}
+        {{- end }}
+      </div>
+      {{- else }}
+        <p class="footer-secondary__empty">{{ i18n "list.empty" }}</p>
+      {{- end }}
+
+      <h2 class="footer-secondary__title footer-secondary__title--sub">{{ i18n "sidebar.tags" }}</h2>
+      {{- if $tags }}
+      <div class="tag-cloud tag-cloud--wide">
+        {{- $limit := default 24 .Site.Params.sidebar.tagLimit -}}
+        {{- range $i, $term := $tags.ByCount }}
+          {{- if lt $i $limit }}
+            <a href="{{ .Page.RelPermalink }}">{{ .Page.Title }} <span class="tag-count">{{ .Count }}</span></a>
+          {{- end }}
+        {{- end }}
+      </div>
+      {{- else }}
+        <p class="footer-secondary__empty">{{ i18n "list.empty" }}</p>
+      {{- end }}
+    </div>
+    <div class="footer-secondary__col">
+      <h2 class="footer-secondary__title">{{ i18n "footer.recent" }}</h2>
+      {{- if $recent }}
+      <ul class="footer-secondary__posts">
+        {{- range $recent }}
+        <li>
+          <a href="{{ .RelPermalink }}">
+            <span class="title">{{ .Title }}</span>
+            <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $format }}</time>
+          </a>
+        </li>
+        {{- end }}
+      </ul>
+      {{- else }}
+        <p class="footer-secondary__empty">{{ i18n "list.empty" }}</p>
+      {{- end }}
+    </div>
+  </div>
+</section>

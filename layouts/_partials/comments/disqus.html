@@ -1,0 +1,31 @@
+{{- $shortname := "" -}}
+{{- with site.Config.Services.Disqus.Shortname }}{{ $shortname = . }}{{ end -}}
+{{- if not $shortname }}{{ with .Site.Params.comments.disqusShortname }}{{ $shortname = . }}{{ end }}{{ end -}}
+{{- if $shortname }}
+{{- /*
+  Host styles matter for Disqus Auto (see _comments.scss).
+  jsonify alone is double-escaped inside <script> (Go html/template JS context);
+  always pipe through safeJS so url/identifier are real strings, not "\"…\"".
+*/ -}}
+<div id="disqus_thread" class="comments__thread"></div>
+<script>
+  document.documentElement.setAttribute("data-disqus-id", {{ .RelPermalink | jsonify | safeJS }});
+  var disqus_config = function () {
+    this.page.url = {{ .Permalink | jsonify | safeJS }};
+    this.page.identifier = {{ .RelPermalink | jsonify | safeJS }};
+  };
+  (function () {
+    if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) !== -1) {
+      document.getElementById("disqus_thread").innerHTML =
+        "Disqus comments are not available when previewing on localhost.";
+      return;
+    }
+    var d = document, s = d.createElement("script");
+    s.src = "https://{{ $shortname }}.disqus.com/embed.js";
+    s.setAttribute("data-timestamp", +new Date());
+    s.async = true;
+    (d.head || d.body).appendChild(s);
+  })();
+</script>
+<noscript>Please enable JavaScript to view comments.</noscript>
+{{- end -}}

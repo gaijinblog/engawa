@@ -1,0 +1,27 @@
+{{ define "main" }}
+  {{- $indexURL := "" -}}
+  {{- with .OutputFormats.Get "json" }}
+    {{- $indexURL = .RelPermalink -}}
+  {{- end -}}
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title }}</h1>
+  </header>
+
+  <div
+    class="search-page"
+    data-search-page
+    {{- with $indexURL }} data-search-index="{{ . }}"{{ end }}
+  >
+    <label class="sr-only" for="search-page-input">{{ i18n "sidebar.search" }}</label>
+    <input
+      id="search-page-input"
+      class="search-page__input"
+      type="search"
+      data-search-page-input
+      placeholder="{{ i18n "search.placeholder" }}"
+      autocomplete="off"
+      autofocus
+    >
+    <ul class="search-page__results" data-search-page-results></ul>
+  </div>
+{{ end }}

@@ -1,0 +1,252 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    line-height: var(--leading-tight);
+    color: var(--color-text);
+    margin: 0 0 var(--space-4);
+    letter-spacing: -0.01em;
+}
+
+h1 {
+    font-size: var(--text-3xl);
+    margin-bottom: var(--space-5);
+
+    @media (max-width: 639px) {
+        font-size: var(--text-2xl);
+    }
+}
+
+h2 {
+    font-size: var(--text-2xl);
+    margin-top: var(--space-8);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-border);
+
+    @media (max-width: 639px) {
+        font-size: var(--text-xl);
+    }
+}
+
+h3 {
+    font-size: var(--text-xl);
+    margin-top: var(--space-6);
+}
+
+h4 {
+    font-size: var(--text-lg);
+    margin-top: var(--space-5);
+}
+
+p {
+    margin: 0 0 var(--space-5);
+}
+
+.prose {
+    font-family: var(--font-serif);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    max-width: var(--measure);
+
+    > *:first-child {
+        margin-top: 0;
+    }
+
+    a {
+        text-decoration: underline;
+    }
+
+    ul,
+    ol {
+        margin: 0 0 var(--space-5);
+        padding-left: 1.4em;
+    }
+
+    li {
+        margin-bottom: var(--space-2);
+    }
+
+    li > ul,
+    li > ol {
+        margin-top: var(--space-2);
+        margin-bottom: var(--space-2);
+    }
+
+    blockquote {
+        margin: var(--space-6) 0;
+        padding: var(--space-4) var(--space-5);
+        border-left: 3px solid var(--color-accent);
+        background: var(--color-accent-soft);
+        border-radius: 0 var(--radius-md) var(--radius-md) 0;
+        color: var(--color-text-secondary);
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    // Alert blockquotes — distinct colors per type (not all the same)
+    blockquote.alert {
+        border-left-width: 3px;
+    }
+
+    blockquote.alert-note {
+        border-left-color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+
+        strong {
+            color: #2563eb;
+        }
+    }
+
+    blockquote.alert-tip {
+        border-left-color: #22c55e;
+        background: rgba(34, 197, 94, 0.1);
+
+        strong {
+            color: #16a34a;
+        }
+    }
+
+    blockquote.alert-important {
+        border-left-color: #a855f7;
+        background: rgba(168, 85, 247, 0.1);
+
+        strong {
+            color: #9333ea;
+        }
+    }
+
+    blockquote.alert-warning {
+        border-left-color: #f59e0b;
+        background: rgba(245, 158, 11, 0.12);
+
+        strong {
+            color: #d97706;
+        }
+    }
+
+    blockquote.alert-caution {
+        border-left-color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+
+        strong {
+            color: #dc2626;
+        }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0 0 var(--space-5);
+        font-family: var(--font-sans);
+        font-size: var(--text-sm);
+
+        // Inline marks in cells: sans faces (esp. JP) often barely show weight-only bold.
+        // Use accent + soft wash so **bold** / *em* / `code` stay obvious in every scheme.
+        strong,
+        b {
+            font-weight: 700;
+            color: var(--color-accent);
+            background: var(--color-accent-soft);
+            padding: 0.05em 0.28em;
+            border-radius: var(--radius-sm);
+            box-decoration-break: clone;
+            -webkit-box-decoration-break: clone;
+        }
+
+        em,
+        i {
+            font-style: italic;
+            color: var(--color-accent);
+            font-weight: 600;
+        }
+
+        mark {
+            color: var(--color-text);
+            background: color-mix(in srgb, var(--color-accent) 28%, var(--color-bg-muted));
+            padding: 0.05em 0.28em;
+            border-radius: var(--radius-sm);
+        }
+
+        code {
+            font-size: 0.92em;
+            color: var(--color-accent);
+            background: var(--color-accent-soft);
+            padding: 0.08em 0.3em;
+            border-radius: var(--radius-sm);
+        }
+    }
+
+    th,
+    td {
+        border: 1px solid var(--color-border);
+        padding: var(--space-2) var(--space-3);
+        text-align: left;
+    }
+
+    th {
+        background: var(--color-bg-muted);
+        font-weight: 600;
+    }
+
+    strong {
+        font-weight: 700;
+    }
+
+    em {
+        font-style: italic;
+    }
+
+    kbd {
+        font-family: var(--font-mono);
+        font-size: 0.85em;
+        padding: 0.1em 0.35em;
+        border: 1px solid var(--color-border-strong);
+        border-radius: var(--radius-sm);
+        background: var(--color-bg-muted);
+    }
+}
+
+.heading-anchor {
+    margin-left: 0.35em;
+    opacity: 0;
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-weight: 400;
+    transition: opacity var(--transition);
+
+    &:hover {
+        color: var(--color-accent);
+    }
+}
+
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor,
+.heading-anchor:focus {
+    opacity: 1;
+}
+
+// Alert title colors on dark (site schemes bring their own in their scheme files)
+[data-theme="dark"] .prose {
+    blockquote.alert-note strong {
+        color: #93c5fd;
+    }
+    blockquote.alert-tip strong {
+        color: #86efac;
+    }
+    blockquote.alert-important strong {
+        color: #d8b4fe;
+    }
+    blockquote.alert-warning strong {
+        color: #fcd34d;
+    }
+    blockquote.alert-caution strong {
+        color: #fca5a5;
+    }
+}

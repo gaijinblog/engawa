@@ -1,0 +1,202 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{- $pageTitle := .Title -}}
+{{- if eq .Kind "taxonomy" -}}
+  {{- $pageTitle = partial "taxonomy-title.html" . -}}
+{{- end -}}
+<title>
+  {{- if .IsHome -}}
+    {{ .Site.Title }}
+  {{- else -}}
+    {{ with $pageTitle }}{{ . }} · {{ end }}{{ .Site.Title }}
+  {{- end -}}
+</title>
+
+{{- $desc := "" -}}
+{{- with .Description }}{{ $desc = . }}{{ end -}}
+{{- if not $desc }}{{ with .Summary }}{{ $desc = . | plainify | truncate 160 }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ with .Site.Params.description }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- with $desc }}
+<meta name="description" content="{{ . | plainify }}">
+{{- end }}
+
+<link rel="canonical" href="{{ .Permalink }}">
+
+{{- /* Translations */ -}}
+{{- range .AllTranslations }}
+<link rel="alternate" hreflang="{{ .Language.Lang }}" href="{{ .Permalink }}">
+{{- end }}
+{{- with .Site.Home.AllTranslations }}
+  {{- range . }}
+    {{- if eq .Lang $.Site.Language.Lang }}
+<link rel="alternate" hreflang="x-default" href="{{ .Permalink }}">
+    {{- end }}
+  {{- end }}
+{{- end }}
+
+{{- with .OutputFormats.Get "RSS" }}
+<link rel="alternate" type="application/rss+xml" title="{{ $.Site.Title }}" href="{{ .Permalink }}">
+{{- end }}
+
+{{- /* Favicon: emit only what the site actually provides (static/img files
+     or params.favicon) so fresh installs never 404. Add the files to the
+     site's static/img/ and they are picked up automatically. */ -}}
+{{- if fileExists "static/img/favicon-32.png" }}
+<link rel="icon" href="{{ "img/favicon-32.png" | relURL }}" type="image/png" sizes="32x32">
+{{- end }}
+{{- if fileExists "static/img/favicon.ico" }}
+<link rel="icon" href="{{ "img/favicon.ico" | relURL }}" sizes="any">
+{{- end }}
+{{- with .Site.Params.favicon }}
+<link rel="icon" href="{{ . | relURL }}" type="image/svg+xml">
+{{- end }}
+{{- if fileExists "static/img/apple-touch-icon.png" }}
+<link rel="apple-touch-icon" href="{{ "img/apple-touch-icon.png" | relURL }}">
+{{- end }}
+
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f7f4ef" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#161412" media="(prefers-color-scheme: dark)">
+
+{{- /* FOUC-safe theme pref + content size + furigana */ -}}
+{{- $default := default "auto" .Site.Params.colorScheme.default -}}
+{{- $schemes := default (slice "light" "dark") .Site.Params.colorScheme.schemes -}}
+{{- $darkish := default (slice "dark") .Site.Params.colorScheme.darkish -}}
+{{- $furifontOn := default true .Site.Params.furifont.enabled -}}
+{{- $furiganaDefault := default "off" .Site.Params.furifont.default -}}
+{{- $furifontSchemes := default (dict "light" "serif" "dark" "serif") .Site.Params.furifont.schemes -}}
+<script>
+(function() {
+  var prefKey = 'engawa-theme-pref';
+  var legacyKey = 'engawa-theme';
+  var prefs = ["auto"].concat({{ $schemes | jsonify | safeJS }});
+  var allowed = { auto: 1 };
+  for (var i = 0; i < prefs.length; i++) allowed[prefs[i]] = 1;
+  var pref = null;
+  try { pref = localStorage.getItem(prefKey); } catch (e) {}
+  if (!allowed[pref]) {
+    try {
+      var legacy = localStorage.getItem(legacyKey);
+      if (allowed[legacy]) {
+        pref = legacy;
+      }
+    } catch (e) {}
+  }
+  if (!allowed[pref]) {
+    var def = {{ $default | jsonify | safeJS }};
+    pref = allowed[def] ? def : 'auto';
+  }
+  function systemTheme() {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  var resolved = pref === 'auto' ? systemTheme() : pref;
+  document.documentElement.setAttribute('data-theme-pref', pref);
+  document.documentElement.setAttribute('data-theme', resolved);
+  // Comma lists (not JSON) — main.js splits on ",". Scheme names are plain ids.
+  document.documentElement.setAttribute('data-theme-prefs', prefs.join(','));
+  document.documentElement.setAttribute('data-theme-darkish', ({{ $darkish | jsonify | safeJS }}).join(','));
+
+  var sizeKey = 'engawa-content-size';
+  var size = null;
+  try { size = localStorage.getItem(sizeKey); } catch (e) {}
+  if (size !== 'compact' && size !== 'comfort' && size !== 'large') {
+    size = 'compact';
+  }
+  document.documentElement.setAttribute('data-content-size', size);
+
+  {{- if $furifontOn }}
+  var furiganaKey = 'engawa-furigana';
+  var furiganaModes = { off: 1, hiragana: 1, romaji: 1 };
+  var furiganaSchemes = {{ $furifontSchemes | jsonify | safeJS }};
+  var furigana = null;
+  try { furigana = localStorage.getItem(furiganaKey); } catch (e) {}
+  if (!furiganaModes[furigana]) {
+    var fDef = {{ $furiganaDefault | jsonify | safeJS }};
+    furigana = furiganaModes[fDef] ? fDef : 'off';
+  }
+  document.documentElement.setAttribute('data-furigana', furigana);
+  var family = furiganaSchemes[resolved] || 'serif';
+  if (family !== 'sans' && family !== 'serif') family = 'serif';
+  document.documentElement.setAttribute('data-furifont-family', family);
+  document.documentElement.setAttribute('data-furifont-base', {{ "fonts/furifont/" | relURL | jsonify | safeJS }});
+  document.documentElement.setAttribute('data-furifont-schemes', JSON.stringify(furiganaSchemes));
+  {{- end }}
+})();
+</script>
+
+{{- /* Fonts */ -}}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+{{- /*
+  Fonts (Google Fonts, free) — every scheme uses the same dual roles via tokens:
+  --font-sans  → UI chrome (nav, switchers, meta, footer)
+  --font-serif → brand, titles, prose
+  --font-mono  → code (a scheme may also style chrome with mono via --font-sans)
+
+  The theme's core schemes (light/dark) use Noto Sans JP + Source Serif 4.
+  Custom schemes with their own faces must load them via `params.fonts.url`
+  (the full css2 URL) — scheme font families are site-side, like the schemes.
+*/ -}}
+{{- $defaultFonts := "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" -}}
+<link href="{{ default $defaultFonts .Site.Params.fonts.url }}" rel="stylesheet">
+
+{{- /* Styles */ -}}
+{{- $scss := resources.Get "scss/main.scss" -}}
+{{- if $scss -}}
+  {{- $sassOpts := dict "transpiler" "dartsass" "targetPath" "css/main.css" "outputStyle" "compressed" "enableSourceMap" false -}}
+  {{- $css := $scss | css.Sass $sassOpts | fingerprint -}}
+  <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}" crossorigin="anonymous">
+{{- end -}}
+
+{{- /* Open Graph */ -}}
+<meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ $pageTitle }}{{ end }}">
+<meta property="og:type" content="{{ if .IsPage }}article{{ else }}website{{ end }}">
+<meta property="og:url" content="{{ .Permalink }}">
+{{- with $desc }}
+<meta property="og:description" content="{{ . | plainify }}">
+{{- end }}
+<meta property="og:site_name" content="{{ .Site.Title }}">
+{{- with .Params.image }}
+  {{- $img := . -}}
+  {{- if $.Resources.GetMatch . }}
+    {{- $img = ($.Resources.GetMatch .).Permalink -}}
+  {{- else if or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "//") -}}
+    {{- $img = . -}}
+  {{- else -}}
+    {{- $img = . | absURL -}}
+  {{- end }}
+<meta property="og:image" content="{{ $img }}">
+{{- end }}
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ $pageTitle }}{{ end }}">
+{{- with $desc }}
+<meta name="twitter:description" content="{{ . | plainify }}">
+{{- end }}
+
+{{- /* Search index URL — relative path so hugo server works */ -}}
+{{- if default true .Site.Params.search.enabled }}
+  {{- $searchPage := false -}}
+  {{- with (first 1 (where .Site.Pages "Layout" "search")) }}
+    {{- $searchPage = index . 0 -}}
+  {{- end -}}
+  {{- if not $searchPage }}
+    {{- range .Site.RegularPages }}
+      {{- if and (eq .Section "page") (or (eq .Slug "search") (eq .File.ContentBaseName "search")) }}
+        {{- $searchPage = . -}}
+      {{- end }}
+    {{- end }}
+  {{- end -}}
+  {{- $indexURL := "" -}}
+  {{- with $searchPage }}
+    {{- with .OutputFormats.Get "json" }}
+      {{- $indexURL = .RelPermalink -}}
+    {{- end }}
+  {{- end -}}
+  {{- with $indexURL }}
+<script>
+  document.documentElement.setAttribute('data-search-index', {{ . | jsonify | safeJS }});
+  document.documentElement.setAttribute('data-i18n-no-results', {{ i18n "search.noResults" | jsonify | safeJS }});
+</script>
+  {{- end }}
+{{- end }}

@@ -1,0 +1,18 @@
+{{- $vid := .Get 0 -}}
+{{- $page := default 1 (.Get 1) -}}
+{{- /* autoplay=0 — player defaults to autoplay otherwise */ -}}
+{{- $basic := querify "page" $page "high_quality" 1 "as_wide" 1 "autoplay" 0 -}}
+{{- $videoQuery := "" -}}
+{{- if strings.HasPrefix (lower $vid) "av" -}}
+  {{- $videoQuery = querify "aid" (strings.TrimPrefix "av" (lower $vid)) -}}
+{{- else if strings.HasPrefix (lower $vid) "bv" -}}
+  {{- $videoQuery = querify "bvid" $vid -}}
+{{- end -}}
+<div class="video-wrapper">
+  <iframe
+    src="https://player.bilibili.com/player.html?{{ $basic | safeURL }}&{{ $videoQuery | safeURL }}"
+    loading="lazy"
+    allowfullscreen
+    title="Bilibili video"
+  ></iframe>
+</div>

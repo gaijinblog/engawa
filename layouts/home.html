@@ -1,0 +1,55 @@
+{{ define "main" }}
+  {{- $pages := where .Site.RegularPages "Type" "in" (default (slice "post") .Site.Params.mainSections) -}}
+  {{- $paginator := .Paginate $pages -}}
+  {{- $isFirst := eq $paginator.PageNumber 1 -}}
+
+  <header class="page-header{{ if $isFirst }} page-header--home-lead{{ end }}">
+    {{- if $isFirst }}
+      {{- /* Page 1: humble quote-style lead (not a competing “latest post” card) */ -}}
+      {{- with .Site.Params.description }}
+        <h1 class="page-header__quote">
+          <span class="page-header__quote-mark" aria-hidden="true">“</span>
+          <span class="page-header__quote-text">{{ . }}</span>
+        </h1>
+      {{- else }}
+        {{- with .Content }}
+          <div class="page-header__quote prose">
+            <span class="page-header__quote-mark" aria-hidden="true">“</span>
+            <div class="page-header__quote-text">{{ . }}</div>
+          </div>
+        {{- else }}
+          <h1 class="page-header__title">{{ i18n "list.latest" }}</h1>
+        {{- end }}
+      {{- end }}
+    {{- else }}
+      {{- /* Page 2+: stable feed label + muted page index (pager stays at bottom) */ -}}
+      <h1 class="page-header__title">{{ i18n "list.latest" }}</h1>
+      <p class="page-header__desc">
+        {{ i18n "list.pageOf" (dict "PageNumber" $paginator.PageNumber "TotalPages" $paginator.TotalPages) }}
+      </p>
+    {{- end }}
+  </header>
+
+  {{- if $paginator.Pages }}
+    {{- /* Featured only on first page of home */ -}}
+    {{- $list := $paginator.Pages -}}
+    {{- if $isFirst }}
+      {{- $featured := index $list 0 -}}
+      {{- if $featured }}
+        {{- partial "post-featured.html" $featured -}}
+        {{- $list = after 1 $list -}}
+      {{- end }}
+    {{- end }}
+
+    {{- if $list }}
+    <div class="post-list">
+      {{- range $list }}
+        {{- partial "post-summary.html" . -}}
+      {{- end }}
+    </div>
+    {{- end }}
+    {{- partial "pagination.html" . -}}
+  {{- else }}
+    <p class="empty-state">{{ i18n "list.empty" }}</p>
+  {{- end }}
+{{ end }}

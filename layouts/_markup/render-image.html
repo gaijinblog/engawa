@@ -1,0 +1,100 @@
+{{- /*
+  Comfortable figures + lightbox-ready images.
+
+  Caption sources (Markdown title attribute):
+    ![alt](photo.jpg "Caption text")
+
+  - Always stored on the figure as data-caption for the lightbox.
+  - Shown under the image on the page only when opt-in (does not affect gallery grids).
+
+  Opt-in (any of):
+    1) Site/page param: images.showCaptions = true
+    2) Attribute class on the line *below* the image (Hugo attribute position):
+         ![alt](img.jpg "Cap")
+         {.caption}
+    3) Attribute flag:
+         ![alt](img.jpg "Cap")
+         {caption=true}
+
+  Requires goldmark wrapStandAloneImageWithinParagraph = false + parser.attribute
+  (see site markup.toml).
+*/ -}}
+{{- $u := urls.Parse .Destination -}}
+{{- $src := .Destination -}}
+{{- $alt := .Text | default "" -}}
+{{- $caption := .Title | default "" -}}
+{{- $isRemote := or $u.IsAbs (hasPrefix .Destination "//") -}}
+
+{{- /* Opt-in: global flag and/or per-image attributes */ -}}
+{{- $attrs := .Attributes | default dict -}}
+{{- $showCaption := default false site.Params.images.showCaptions -}}
+{{- if isset $attrs "caption" -}}
+  {{- $cv := index $attrs "caption" -}}
+  {{- if or (eq $cv true) (eq $cv "true") (eq $cv "1") (eq $cv "") -}}
+    {{- $showCaption = true -}}
+  {{- else if or (eq $cv false) (eq $cv "false") (eq $cv "0") -}}
+    {{- $showCaption = false -}}
+  {{- end -}}
+{{- end -}}
+{{- with index $attrs "class" -}}
+  {{- range split . " " -}}
+    {{- if or (eq . "caption") (eq . "show-caption") -}}
+      {{- $showCaption = true -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- /* Nothing to show without a title caption (alt alone stays accessibility-only) */ -}}
+{{- if not $caption -}}
+  {{- $showCaption = false -}}
+{{- end -}}
+
+{{- /* Lightbox caption: explicit title, else empty (JS may fall back to alt) */ -}}
+{{- $lightboxCaption := $caption -}}
+
+{{- $res := false -}}
+{{- if not $isRemote }}
+  {{- with .Page.Resources.GetMatch (path.Base .Destination) }}
+    {{- $res = . -}}
+  {{- else }}
+    {{- with .Page.Resources.GetMatch .Destination }}
+      {{- $res = . -}}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+
+<figure
+  class="post-figure{{ if $showCaption }} post-figure--captioned{{ end }}"
+  {{- if default true site.Params.images.lightbox }} data-lightbox{{ end }}
+  {{- if $lightboxCaption }} data-caption="{{ $lightboxCaption | plainify }}"{{ end }}
+>
+  {{- if $res }}
+    {{- $full := $res -}}
+    {{- if gt $res.Width 1400 }}
+      {{- $full = $res.Resize "1400x" -}}
+    {{- end }}
+    {{- $display := $res -}}
+    {{- if gt $res.Width 960 }}
+      {{- $display = $res.Resize "960x" -}}
+    {{- end }}
+    <img
+      src="{{ $display.RelPermalink }}"
+      data-full="{{ $full.RelPermalink }}"
+      alt="{{ $alt }}"
+      width="{{ $display.Width }}"
+      height="{{ $display.Height }}"
+      {{- if default true site.Params.images.lazy }} loading="lazy"{{ end }}
+      decoding="async"
+    >
+  {{- else }}
+    <img
+      src="{{ $src | safeURL }}"
+      data-full="{{ $src | safeURL }}"
+      alt="{{ $alt }}"
+      {{- if default true site.Params.images.lazy }} loading="lazy"{{ end }}
+      decoding="async"
+    >
+  {{- end }}
+  {{- if and $caption $showCaption }}
+    <figcaption class="post-figure__caption">{{ $caption | .Page.RenderString }}</figcaption>
+  {{- end }}
+</figure>

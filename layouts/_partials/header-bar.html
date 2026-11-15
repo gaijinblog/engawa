@@ -1,0 +1,78 @@
+{{- /*
+  Optional second header bar (utility / social / taxonomy links).
+  Shown only when params.headerBar.enabled is true and Menus.headerBar has items.
+
+  Configure in menu.toml, e.g.:
+
+    [[headerBar]]
+      name   = "GitHub"
+      url    = "https://github.com"
+      weight = 10
+
+    [[headerBar]]
+      name    = "Tags"
+      pageRef = "/tags"
+      weight  = 20
+
+    [[headerBar]]
+      name   = "Anime"
+      url    = "/tags/anime/"
+      weight = 30
+
+  Optional params per item:
+    external = true   # force new tab (auto for http(s) URLs)
+    newTab   = true
+    rel      = "me"
+*/ -}}
+{{- $enabled := false -}}
+{{- with .Site.Params.headerBar -}}
+  {{- $enabled = default false .enabled -}}
+{{- end -}}
+{{- /* Hugo lowercases menu identifiers → headerBar becomes headerbar */ -}}
+{{- $menu := .Site.Menus.headerbar -}}
+{{- if not $menu }}{{ $menu = .Site.Menus.headerBar }}{{ end -}}
+{{- if and $enabled $menu }}
+<nav class="header-bar" aria-label="{{ i18n "headerBar.label" }}">
+  <div class="header-bar__inner">
+    <ul class="header-bar__list">
+      {{- range $menu }}
+        {{- $url := .URL -}}
+        {{- $isExternal := or (hasPrefix $url "http://") (hasPrefix $url "https://") (hasPrefix $url "//") -}}
+        {{- with .Params.external -}}
+          {{- if . }}{{ $isExternal = true }}{{ end -}}
+        {{- end -}}
+        {{- $newTab := $isExternal -}}
+        {{- with .Params.newTab -}}
+          {{- $newTab = . -}}
+        {{- end -}}
+        {{- $href := $url -}}
+        {{- if not $isExternal -}}
+          {{- $href = $url | relLangURL -}}
+        {{- end -}}
+        {{- $rel := "" -}}
+        {{- if $isExternal -}}
+          {{- $rel = default "noopener noreferrer" .Params.rel -}}
+          {{- if and .Params.rel (ne $rel "noopener noreferrer") (not (strings.Contains $rel "noopener")) -}}
+            {{- $rel = printf "%s noopener noreferrer" .Params.rel -}}
+          {{- end -}}
+        {{- else if .Params.rel -}}
+          {{- $rel = .Params.rel -}}
+        {{- end -}}
+        {{- /* Use resolved page title for internal links, literal name for external */ -}}
+        {{- $label := .Name -}}
+        {{- with .Page }}
+          {{- $label = .Title -}}
+        {{- end -}}
+        <li class="header-bar__item">
+          <a
+            href="{{ $href }}"
+            class="header-bar__link{{ if $isExternal }} header-bar__link--external{{ end }}{{ if or ($.IsMenuCurrent "headerbar" .) ($.HasMenuCurrent "headerbar" .) }} is-active{{ end }}"
+            {{- if $newTab }} target="_blank"{{ end -}}
+            {{- with $rel }} rel="{{ . }}"{{ end -}}
+          >{{ $label }}</a>
+        </li>
+      {{- end }}
+    </ul>
+  </div>
+</nav>
+{{- end -}}

@@ -1,0 +1,42 @@
+{{- /*
+  Featured / most-recent post on home.
+  Uses the frontmatter summary field, with fallback to Hugo summary then description.
+*/ -}}
+{{- $showImage := default true .Site.Params.home.showImage -}}
+{{- $img := false -}}
+{{- with .Params.image }}{{ $img = . }}{{ end -}}
+
+{{- $excerpt := .Params.summary | default (.Summary | plainify | truncate 340) -}}
+{{- if not $excerpt }}{{ $excerpt = .Description }}{{ end -}}
+
+<article class="post-featured{{ if and $showImage $img }} post-featured--has-image{{ else }} post-featured--no-image{{ end }}">
+  {{- if and $showImage $img }}
+    {{- $res := .Resources.GetMatch $img -}}
+    {{- $remote := or (hasPrefix $img "http://") (hasPrefix $img "https://") (hasPrefix $img "//") -}}
+    <a class="post-featured__media" href="{{ .RelPermalink }}" tabindex="-1" aria-hidden="true">
+      {{- if $res }}
+        {{- $large := $res.Fill "960x540 Center" -}}
+        <img src="{{ $large.RelPermalink }}" alt="" width="{{ $large.Width }}" height="{{ $large.Height }}" loading="eager">
+      {{- else if $remote }}
+        <img src="{{ $img | safeURL }}" alt="" loading="eager">
+      {{- else }}
+        <img src="{{ $img | relURL }}" alt="" loading="eager">
+      {{- end }}
+    </a>
+  {{- end }}
+
+  <div class="post-featured__body">
+    <p class="post-featured__label">{{ i18n "list.latest" | default "Latest" }}</p>
+    <h2 class="post-featured__title">
+      <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+    </h2>
+    <hr class="sep-inner" aria-hidden="true">
+    {{- partial "post-meta.html" . -}}
+    {{- with $excerpt }}
+    <div class="post-featured__excerpt">
+      <p>{{ . }}</p>
+    </div>
+    {{- end }}
+    <a class="post-featured__more" href="{{ .RelPermalink }}">{{ i18n "list.continueReading" }} →</a>
+  </div>
+</article>

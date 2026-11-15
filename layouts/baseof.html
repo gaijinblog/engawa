@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="{{ .Language.Lang }}" data-theme="light" data-theme-pref="auto" data-content-size="compact" data-furigana="off" data-furifont-family="serif">
+<head>
+  {{- partial "head.html" . -}}
+  {{- block "head" . }}{{ end -}}
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  {{- partial "header.html" . -}}
+
+  {{- /* Layout flags: sidebar, full-width content, wide secondary footer */ -}}
+  {{- $showSidebar := true -}}
+  {{- if isset .Site.Params.sidebar "enabled" -}}
+    {{- $showSidebar = .Site.Params.sidebar.enabled -}}
+  {{- end -}}
+  {{- if eq .Params.sidebar false -}}
+    {{- $showSidebar = false -}}
+  {{- end -}}
+  {{- if eq .Params.sidebar true -}}
+    {{- $showSidebar = true -}}
+  {{- end -}}
+
+  {{- /* fullWidth: opt-in only (default false). Widens the content column when
+       the sidebar is off; without it, no-sidebar pages keep the usual measure. */ -}}
+  {{- $fullWidth := false -}}
+  {{- if eq .Params.fullWidth true -}}
+    {{- $fullWidth = true -}}
+  {{- end -}}
+
+  {{- $wideFooter := false -}}
+  {{- if eq .Params.wideFooter true -}}
+    {{- $wideFooter = true -}}
+  {{- end -}}
+  {{- /* If sidebar is explicitly off on a page, enable wide footer by default */ -}}
+  {{- if and (eq .Params.sidebar false) (ne .Params.wideFooter false) -}}
+    {{- $wideFooter = true -}}
+  {{- end -}}
+  {{- /* Never show taxonomies in both places */ -}}
+  {{- if $showSidebar -}}
+    {{- $wideFooter = false -}}
+  {{- end -}}
+
+  <div class="site">
+    <div class="site-main">
+      <div class="layout{{ if not $showSidebar }} layout--no-sidebar{{ end }}{{ if and (not $showSidebar) $fullWidth }} layout--full-width{{ end }}{{ if $wideFooter }} layout--wide-footer{{ end }}">
+        <main id="main" class="layout__content">
+          {{- block "main" . }}{{ end -}}
+        </main>
+        {{- if $showSidebar -}}
+          <aside class="layout__sidebar" aria-label="Sidebar">
+            {{- partial "sidebar.html" . -}}
+          </aside>
+        {{- end -}}
+      </div>
+    </div>
+    {{- if $wideFooter -}}
+      {{- partial "footer-secondary.html" . -}}
+    {{- end -}}
+    {{- partial "footer.html" . -}}
+  </div>
+
+  {{- partial "scripts.html" . -}}
+  {{- block "footer" . }}{{ end -}}
+</body>
+</html>

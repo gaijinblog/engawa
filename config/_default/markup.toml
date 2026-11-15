@@ -1,0 +1,42 @@
+# Engawa — markdown / TOC / code highlighting defaults.
+#
+# Hugo does NOT merge `markup` from themes by default (_merge = none).
+# The site must opt in, usually in hugo.toml:
+#
+#     [markup]
+#         _merge = 'deep'
+#
+# Or copy this file into the site's config/_default/.
+# Site-side markup keys always win over these defaults.
+#
+# Field notes:
+# - goldmark.renderer.unsafe — allow raw HTML in Markdown (<abbr>, <ruby>, …).
+# - wrapStandAloneImageWithinParagraph = false + parser.attribute —
+#   required by render-image.html so ![alt](img "Cap") plus {.caption} /
+#   {caption=true} on the next line reach the image hook.
+# - tableOfContents — h2–h4, ordered (matches the TOC partial).
+# - highlight — CSS classes (not inline styles), line numbers on, guess syntax.
+
+[goldmark.renderer]
+unsafe = true
+
+[goldmark.parser]
+wrapStandAloneImageWithinParagraph = false
+
+[goldmark.parser.attribute]
+block = true
+title = true
+
+[tableOfContents]
+startLevel = 2
+endLevel   = 4
+ordered    = true
+
+[highlight]
+noClasses          = false
+codeFences         = true
+guessSyntax        = true
+lineNoStart        = 1
+lineNos            = true
+lineNumbersInTable = true
+tabWidth           = 4

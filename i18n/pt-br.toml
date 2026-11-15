@@ -1,0 +1,97 @@
+[nav]
+home = "Início"
+menu = "Menu"
+close = "Fechar"
+
+[headerBar]
+label = "Links utilitários"
+
+[theme]
+toggle = "Tema de cores"
+auto = "Sistema"
+light = "Claro"
+dark = "Escuro"
+
+[lang]
+label = "Idioma"
+switch = "Trocar idioma"
+
+[list]
+continueReading = "Continuar lendo"
+empty = "Ainda não há posts."
+pageOf = "Página {{ .PageNumber }} de {{ .TotalPages }}"
+latest = "Mais recente"
+
+[contentSize]
+label = "Tamanho do texto"
+compact = "Compacto"
+comfort = "Conforto"
+large = "Grande"
+
+[furigana]
+toggle = "Furigana"
+off = "Desligado"
+hiragana = "Hiragana"
+romaji = "Romaji"
+
+[alert]
+note = "Nota"
+tip = "Dica"
+important = "Importante"
+warning = "Aviso"
+caution = "Cuidado"
+
+[article]
+postedOn = "Publicado"
+updatedOn = "Atualizado"
+readingTime = "{{ .Count }} min de leitura"
+readingTime_one = "{{ .Count }} min de leitura"
+readingTime_other = "{{ .Count }} min de leitura"
+tableOfContents = "Nesta página"
+tags = "Tags"
+categories = "Categorias"
+previous = "Anterior"
+next = "Próximo"
+related = "Relacionados"
+translations = "Também em"
+comments = "Comentários"
+
+[sidebar]
+about = "Sobre"
+search = "Buscar"
+categories = "Categorias"
+tags = "Tags"
+archives = "Arquivos"
+
+[search]
+placeholder = "Buscar…"
+noResults = "Nenhum resultado"
+results = "Resultados"
+open = "Buscar"
+
+[images]
+close = "Fechar imagem"
+previous = "Imagem anterior"
+next = "Próxima imagem"
+zoom = "Ver ampliada"
+
+[footer]
+poweredBy = "Feito com {{ .Generator }}"
+rights = "Todos os direitos reservados."
+explore = "Explorar"
+recent = "Posts recentes"
+
+[notFound]
+title = "Página não encontrada"
+message = "Esta página não existe ou foi movida."
+home = "Voltar ao início"
+
+[taxonomies]
+tags = "Tags"
+categories = "Categorias"
+posts = "{{ .Count }} publicações"
+posts_one = "{{ .Count }} publicação"
+posts_other = "{{ .Count }} publicações"
+
+[archives]
+title = "Arquivos"

@@ -1,0 +1,35 @@
+{{- $showSummary := default true .Site.Params.home.showSummary -}}
+{{- $showImage := default true .Site.Params.home.showImage -}}
+{{- $img := false -}}
+{{- with .Params.image }}{{ $img = . }}{{ end -}}
+{{- $hasImage := and $showImage $img -}}
+
+<article class="post-summary{{ if $hasImage }} post-summary--has-image{{ else }} post-summary--no-image{{ end }}">
+  <div class="post-summary__layout">
+    <div class="post-summary__text">
+      <h2 class="post-summary__title">
+        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+      </h2>
+      <hr class="sep-inner" aria-hidden="true">
+      {{- partial "post-meta.html" . -}}
+      {{- if and $showSummary .Description }}
+          <div class="post-summary__excerpt"><p>{{ .Description }}</p></div>
+      {{- end }}
+      <a class="post-summary__more" href="{{ .RelPermalink }}">{{ i18n "list.continueReading" }} →</a>
+    </div>
+    {{- if $hasImage }}
+      {{- $res := .Resources.GetMatch $img -}}
+      {{- $remote := or (hasPrefix $img "http://") (hasPrefix $img "https://") (hasPrefix $img "//") -}}
+      <a class="post-summary__thumb" href="{{ .RelPermalink }}" tabindex="-1" aria-hidden="true">
+        {{- if $res }}
+          {{- $thumb := $res.Fill "352x240 Center" -}}
+          <img src="{{ $thumb.RelPermalink }}" alt="" width="{{ $thumb.Width }}" height="{{ $thumb.Height }}" loading="lazy">
+        {{- else if $remote }}
+          <img src="{{ $img | safeURL }}" alt="" loading="lazy">
+        {{- else }}
+          <img src="{{ $img | relURL }}" alt="" loading="lazy">
+        {{- end }}
+      </a>
+    {{- end }}
+  </div>
+</article>

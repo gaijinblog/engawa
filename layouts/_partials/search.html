@@ -1,0 +1,37 @@
+{{- /* Resolve search JSON index (relative, Stack-style) */ -}}
+{{- $indexURL := "" -}}
+{{- $searchPage := false -}}
+{{- with (first 1 (where .Site.Pages "Layout" "search")) }}
+  {{- $searchPage = index . 0 -}}
+{{- end -}}
+{{- if not $searchPage }}
+  {{- range .Site.RegularPages }}
+    {{- if and (eq .Section "page") (or (eq .Slug "search") (eq .File.ContentBaseName "search")) }}
+      {{- $searchPage = . -}}
+    {{- end }}
+  {{- end }}
+{{- end -}}
+{{- with $searchPage }}
+  {{- with .OutputFormats.Get "json" }}
+    {{- $indexURL = .RelPermalink -}}
+  {{- end }}
+{{- end -}}
+{{- $sid := "site" -}}
+{{- with .File }}{{ $sid = .UniqueID }}{{ end -}}
+<div
+  class="search-widget"
+  data-search-widget
+  {{- with $indexURL }} data-search-index="{{ . }}"{{ end }}
+>
+  <label class="sr-only" for="search-input-{{ $sid }}">{{ i18n "sidebar.search" }}</label>
+  <input
+    id="search-input-{{ $sid }}"
+    class="search-widget__input"
+    type="search"
+    data-search-input
+    placeholder="{{ i18n "search.placeholder" }}"
+    autocomplete="off"
+    enterkeyhint="search"
+  >
+  <div class="search-widget__results" data-search-results role="listbox" aria-label="{{ i18n "search.results" }}"></div>
+</div>

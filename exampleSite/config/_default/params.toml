@@ -1,0 +1,78 @@
+# ExampleSite — exercises every major Engawa params block.
+# Field meanings: see the theme's config/_default/params.toml comments.
+
+mainSections = ["post"]
+description  = ""   # per-language lead quote lives in languages.toml
+favicon      = "img/favicon.svg"
+
+[author]
+    name        = "Engawa Author"
+    avatar      = "img/avatar.svg"
+    avatarStyle = "mark"
+    avatarColor = "text"
+    avatarSize  = "fixed"
+    bio         = ""   # per-language in languages.toml
+
+    [author.avatarColors]
+        dark    = "accent"
+        blogger = "accent"
+        aurora  = "accent"
+
+[colorScheme]
+    default = "auto"
+    toggle  = true
+    # Built-ins + site-owned blogger / aurora (see assets/scss/_*.scss).
+    schemes = ["light", "dark", "blogger", "aurora"]
+    darkish = ["dark", "aurora"]
+
+[home]
+    showSummary = true
+    showImage   = true
+
+[article]
+    showReadingTime = true
+    showToc         = true
+    dateFormat      = "Jan 2, 2006"
+
+[sidebar]
+    enabled        = true
+    showSearch     = true
+    showCategories = true
+    showTags       = true
+    showAuthor     = true
+    showAuthorName = true
+    tagLimit       = 20
+    categoryLimit  = 12
+
+[search]
+    enabled = true
+
+[comments]
+    enabled  = true
+    provider = "disqus"
+
+[images]
+    lightbox     = true
+    lazy         = true
+    showCaptions = true
+
+[footer]
+    since      = 2024
+    customText = ""   # per-language in languages.toml
+
+[headerBar]
+    enabled = true
+
+[furifont]
+    enabled = true
+    default = "off"
+
+    [furifont.schemes]
+        light   = "serif"
+        dark    = "serif"
+        blogger = "serif"
+        aurora  = "sans"
+
+# Empty → theme default (Noto Sans JP + Source Serif 4). Aurora uses those too.
+[fonts]
+    url = ""

@@ -1,0 +1,91 @@
+[nav]
+home = "首頁"
+menu = "選單"
+close = "關閉"
+
+[headerBar]
+label = "實用連結"
+
+[theme]
+toggle = "配色"
+auto = "跟隨系統"
+light = "淺色"
+dark = "深色"
+
+[lang]
+label = "語言"
+switch = "切換語言"
+
+[list]
+continueReading = "繼續閱讀"
+empty = "尚無文章。"
+pageOf = "第 {{ .PageNumber }} / {{ .TotalPages }} 頁"
+latest = "最新"
+
+[contentSize]
+label = "字級"
+compact = "小"
+comfort = "中"
+large = "大"
+
+[alert]
+note = "注意"
+tip = "提示"
+important = "重要"
+warning = "警告"
+caution = "當心"
+
+[article]
+postedOn = "發布"
+updatedOn = "更新"
+readingTime = "約 {{ .Count }} 分鐘"
+readingTime_one = "約 {{ .Count }} 分鐘"
+readingTime_other = "約 {{ .Count }} 分鐘"
+tableOfContents = "目錄"
+tags = "標籤"
+categories = "分類"
+previous = "上一篇"
+next = "下一篇"
+related = "相關文章"
+translations = "其他語言"
+comments = "留言"
+
+[sidebar]
+about = "關於"
+search = "搜尋"
+categories = "分類"
+tags = "標籤"
+archives = "彙整"
+
+[search]
+placeholder = "搜尋…"
+noResults = "無結果"
+results = "結果"
+open = "搜尋"
+
+[images]
+close = "關閉圖片"
+previous = "上一張"
+next = "下一張"
+zoom = "放大檢視"
+
+[footer]
+poweredBy = "以 {{ .Generator }} 建置"
+rights = "版權所有。"
+explore = "探索"
+recent = "最近文章"
+
+[notFound]
+title = "找不到頁面"
+message = "此頁面不存在或已移動。"
+home = "返回首頁"
+
+[taxonomies]
+tags = "標籤"
+categories = "分類"
+posts = "{{ .Count }} 篇文章"
+posts_one = "{{ .Count }} 篇文章"
+posts_other = "{{ .Count }} 篇文章"
+
+[archives]
+title = "彙整"

@@ -1,0 +1,10 @@
+{{- if default true .Site.Params.article.showToc -}}
+  {{- with .TableOfContents -}}
+    {{- if ne . "<nav id=\"TableOfContents\"></nav>" }}
+<div class="toc">
+  <h2 class="toc__title">{{ i18n "article.tableOfContents" }}</h2>
+  {{ . }}
+</div>
+    {{- end -}}
+  {{- end -}}
+{{- end -}}

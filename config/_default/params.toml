@@ -1,0 +1,150 @@
+# Engawa — theme default params.
+# Override any key in the site's config/_default/params.toml.
+# Per-language copy (description, author bio, footer text) belongs in the
+# site's languages.toml under [lang.params], not here.
+
+# Sections included on the home list, RSS, and search index.
+mainSections = ["post"]
+
+# Site-wide meta description fallback when a page has none.
+# Prefer per-language values in languages.toml → [lang.params] description.
+description = ""
+
+# Optional SVG favicon path under static/ (e.g. "img/favicon.svg").
+# PNG/ICO/apple-touch in static/img/ are picked up automatically when present.
+favicon = ""
+
+# ---------------------------------------------------------------------------
+# Author (sidebar card)
+# ---------------------------------------------------------------------------
+[author]
+    name = ""
+    # Image under static/, e.g. "img/avatar.jpg". Empty string hides the avatar.
+    avatar = ""
+    # "photo" — framed image · "mark" — borderless monochrome logo (recolors with scheme)
+    avatarStyle = "photo"
+    # mark only: fill from theme text color or accent
+    avatarColor = "text"   # text | accent
+    # "fixed" (~7.5rem) | "fill" (near full sidebar width, with margin)
+    avatarSize = "fixed"
+    bio = ""
+    # Optional per-scheme mark color (text | accent), keyed by scheme name:
+    # [author.avatarColors]
+    #     mecha = "accent"
+    # Optional per-scheme art (only when the drawing itself changes):
+    # [author.avatars]
+    #     dark = "img/avatar-dark.svg"
+
+# ---------------------------------------------------------------------------
+# Color schemes
+# ---------------------------------------------------------------------------
+[colorScheme]
+    # Initial preference: "auto" or any name listed in schemes.
+    default = "auto"
+    # Show the header theme switcher.
+    toggle  = true
+    # Selectable schemes. "auto" (follow system) is always available in the UI
+    # even if omitted here. Theme ships light / dark. Add site-owned schemes
+    # here and import their SCSS from the site's _custom-schemes.scss.
+    schemes = ["light", "dark"]
+    # Schemes whose page background is dark (Disqus only has light/dark UI).
+    darkish = ["dark"]
+
+# ---------------------------------------------------------------------------
+# Home list
+# ---------------------------------------------------------------------------
+[home]
+    # Show excerpt under each post title on the home list.
+    showSummary = true
+    # Show cover thumbnails when a post has `image` in front matter.
+    showImage   = true
+
+# ---------------------------------------------------------------------------
+# Single posts (type: post)
+# ---------------------------------------------------------------------------
+[article]
+    showReadingTime = true
+    showToc         = true
+    # Go time layout for the meta panel (e.g. "2006.01.02", "Jan 2, 2006").
+    dateFormat      = "2006.01.02"
+
+# ---------------------------------------------------------------------------
+# Sidebar
+# ---------------------------------------------------------------------------
+[sidebar]
+    # Site-wide default; per-page front matter `sidebar: false` still wins.
+    enabled         = true
+    showSearch      = true
+    showCategories  = true
+    showTags        = true
+    showAuthor      = true
+    # Name under the avatar (between avatar and bio).
+    showAuthorName  = true
+    # Max terms shown (0 = unlimited).
+    tagLimit        = 20
+    categoryLimit   = 12
+
+# ---------------------------------------------------------------------------
+# Search widget (needs content/page/search with outputs: [html, json])
+# ---------------------------------------------------------------------------
+[search]
+    enabled = true
+
+# ---------------------------------------------------------------------------
+# Comments
+# ---------------------------------------------------------------------------
+[comments]
+    enabled  = true
+    # Currently only "disqus". Set [services.disqus] shortname in hugo.toml.
+    provider = "disqus"
+
+# ---------------------------------------------------------------------------
+# Images (render-image.html)
+# ---------------------------------------------------------------------------
+[images]
+    lightbox = true
+    lazy     = true
+    # When true, show figcaptions under images on the page.
+    # When false (default), title still feeds the lightbox only; opt in per
+    # image with {.caption} or {caption=true} on the following line.
+    showCaptions = false
+
+# ---------------------------------------------------------------------------
+# Footer
+# ---------------------------------------------------------------------------
+[footer]
+    # Copyright start year; 0 hides the year range (shows current year only).
+    since      = 0
+    # Fallback tagline. Prefer per-language: languages.toml → [lang.params.footer] customText.
+    customText = ""
+
+# ---------------------------------------------------------------------------
+# Second header bar (utility / social / taxonomy links)
+# ---------------------------------------------------------------------------
+# Items come from Menus.headerBar (or headerbar) in menu.toml.
+# The bar is omitted entirely when enabled is false or the menu is empty.
+[headerBar]
+    enabled = false
+
+# ---------------------------------------------------------------------------
+# Furigana (Furifont) — Off / Hiragana / Romaji header toggle
+# ---------------------------------------------------------------------------
+[furifont]
+    enabled = true
+    # Initial mode when the visitor has no localStorage preference.
+    default = "off"   # off | hiragana | romaji
+
+    # Which Furifont face to use per color scheme (sans | serif).
+    # Add an entry for every custom scheme that should differ from serif.
+    [furifont.schemes]
+        light = "serif"
+        dark  = "serif"
+
+# ---------------------------------------------------------------------------
+# Web fonts
+# ---------------------------------------------------------------------------
+# Full Google Fonts css2 URL covering every family used by active schemes'
+# --font-sans / --font-serif / --font-mono tokens. Empty string → theme
+# default (Noto Sans JP + Source Serif 4), enough for light / dark.
+[fonts]
+    url = ""

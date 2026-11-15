@@ -1,0 +1,4 @@
+# Site-owned scheme labels (theme i18n already has auto / light / dark).
+[theme]
+blogger = "Blogger"
+aurora  = "Aurora"

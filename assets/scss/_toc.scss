@@ -1,0 +1,120 @@
+// Full-width content TOC — compact, at most two columns (never a sparse 3-up)
+
+.toc {
+    width: 100%;
+    margin: 0 0 var(--space-6);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    box-sizing: border-box;
+
+    .toc__title {
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-muted);
+        margin: 0 0 var(--space-2);
+        border: 0;
+        padding: 0 0 var(--space-2);
+        font-family: var(--font-sans);
+        font-weight: 600;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    nav,
+    ul,
+    ol {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    // Default: single column (short TOCs stay clean)
+    nav > ul,
+    nav > ol {
+        columns: 1;
+        column-gap: var(--space-4);
+    }
+
+    // Only open a 2nd column when there are enough top-level entries
+    // (4+) and the panel is wide enough for ~16rem columns
+    nav > ul:has(> li:nth-child(4)),
+    nav > ol:has(> li:nth-child(4)) {
+        columns: 2;
+        column-width: 16rem;
+    }
+
+    // Keep each top-level section (and its nested list) together
+    nav > ul > li,
+    nav > ol > li {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin: 0 0 0.15rem;
+    }
+
+    // Nested lists under their parent
+    nav > ul ul,
+    nav > ol ol,
+    nav > ul ol,
+    nav > ol ul {
+        display: block;
+        width: 100%;
+        margin: 0.1rem 0 0.15rem;
+        padding-left: 0.7rem;
+        margin-left: 0.1rem;
+        border-left: 1px solid var(--color-border);
+    }
+
+    ul ul ul,
+    ol ol ol,
+    ul ol ol,
+    ol ul ul {
+        padding-left: 0.55rem;
+    }
+
+    li {
+        margin: 0;
+        padding: 0;
+    }
+
+    a {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.18em 0.4em;
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        font-size: var(--text-sm);
+        line-height: 1.3;
+        border-radius: var(--radius-sm);
+        word-break: break-word;
+        hyphens: auto;
+
+        &:hover {
+            color: var(--color-accent);
+            background: var(--color-accent-soft);
+        }
+    }
+
+    li li > a {
+        font-size: 0.9em;
+        color: var(--color-text-muted);
+        padding: 0.12em 0.35em;
+    }
+
+    li li li > a {
+        font-size: 0.86em;
+    }
+
+    @media (max-width: 639px) {
+        padding: var(--space-3);
+
+        nav > ul,
+        nav > ol {
+            columns: 1;
+        }
+    }
+}

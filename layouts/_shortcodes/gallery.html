@@ -1,0 +1,13 @@
+{{- /*
+  Usage:
+    {{< gallery >}}
+    ![alt](image1.jpg)
+    ![alt](image2.jpg)
+    {{< /gallery >}}
+
+  Or with columns: {{< gallery cols="3" >}}
+*/ -}}
+{{- $cols := .Get "cols" | default "2" -}}
+<div class="gallery{{ if eq $cols "3" }} gallery--3{{ end }}" data-gallery>
+  {{ .Inner | markdownify }}
+</div>

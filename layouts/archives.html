@@ -1,0 +1,22 @@
+{{ define "main" }}
+  <header class="page-header">
+    <h1 class="page-header__title">{{ .Title | default (i18n "archives.title") }}</h1>
+  </header>
+
+  {{- $pages := where .Site.RegularPages "Type" "in" (default (slice "post") .Site.Params.mainSections) -}}
+  {{- $format := default "2006.01.02" .Site.Params.article.dateFormat -}}
+
+  <div class="archives">
+    {{- range $pages.GroupByDate "2006" }}
+      <h2 class="archives__year">{{ .Key }}</h2>
+      <ul class="archives__list">
+        {{- range .Pages }}
+        <li class="archives__item">
+          <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format $format }}</time>
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </li>
+        {{- end }}
+      </ul>
+    {{- end }}
+  </div>
+{{ end }}

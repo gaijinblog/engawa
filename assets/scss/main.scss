@@ -1,0 +1,23 @@
+@use "tokens";
+@use "base";
+@use "typography";
+@use "layout";
+@use "header";
+@use "footer";
+@use "sidebar";
+@use "toc";
+@use "list";
+@use "single";
+@use "taxonomy";
+@use "pagination";
+@use "code";
+@use "images";
+@use "search";
+@use "comments";
+@use "utilities";
+@use "furifont";
+@use "separators";
+// Site-owned schemes come last so their tokens + component overrides win.
+// Theme ships an empty `_custom-schemes.scss`; the site replaces it.
+@use "custom-schemes";
+

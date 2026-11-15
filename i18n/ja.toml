@@ -1,0 +1,97 @@
+[nav]
+home = "ホーム"
+menu = "メニュー"
+close = "閉じる"
+
+[headerBar]
+label = "ユーティリティ"
+
+[theme]
+toggle = "カラーテーマ"
+auto = "システム"
+light = "ライト"
+dark = "ダーク"
+
+[lang]
+label = "言語"
+switch = "言語を切り替え"
+
+[list]
+continueReading = "続きを読む"
+empty = "まだ記事がありません。"
+pageOf = "{{ .PageNumber }} / {{ .TotalPages }} ページ"
+latest = "最新"
+
+[contentSize]
+label = "文字サイズ"
+compact = "小"
+comfort = "中"
+large = "大"
+
+[furigana]
+toggle = "ふりがな"
+off = "オフ"
+hiragana = "ひらがな"
+romaji = "ローマ字"
+
+[alert]
+note = "注記"
+tip = "ヒント"
+important = "重要"
+warning = "警告"
+caution = "注意"
+
+[article]
+postedOn = "公開"
+updatedOn = "更新"
+readingTime = "約 {{ .Count }} 分"
+readingTime_one = "約 {{ .Count }} 分"
+readingTime_other = "約 {{ .Count }} 分"
+tableOfContents = "目次"
+tags = "タグ"
+categories = "カテゴリ"
+previous = "前の記事"
+next = "次の記事"
+related = "関連記事"
+translations = "他の言語"
+comments = "コメント"
+
+[sidebar]
+about = "このサイトについて"
+search = "検索"
+categories = "カテゴリ"
+tags = "タグ"
+archives = "アーカイブ"
+
+[search]
+placeholder = "検索…"
+noResults = "結果なし"
+results = "検索結果"
+open = "検索"
+
+[images]
+close = "画像を閉じる"
+previous = "前の画像"
+next = "次の画像"
+zoom = "拡大表示"
+
+[footer]
+poweredBy = "{{ .Generator }} で構築"
+rights = "All rights reserved."
+explore = "探索"
+recent = "最近の記事"
+
+[notFound]
+title = "ページが見つかりません"
+message = "このページは存在しないか、移動した可能性があります。"
+home = "ホームへ戻る"
+
+[taxonomies]
+tags = "タグ"
+categories = "カテゴリ"
+posts = "{{ .Count }} 件"
+posts_one = "{{ .Count }} 件"
+posts_other = "{{ .Count }} 件"
+
+[archives]
+title = "アーカイブ"

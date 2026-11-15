@@ -1,0 +1,11 @@
+{{- /*
+  Localized title for taxonomy list pages (categories, tags, …).
+  Hugo’s .Title is the English plural; prefer i18n "taxonomies.<plural>".
+*/ -}}
+{{- $title := .Title -}}
+{{- with .Data.Plural -}}
+  {{- with i18n (printf "taxonomies.%s" .) -}}
+    {{- $title = . -}}
+  {{- end -}}
+{{- end -}}
+{{- $title -}}

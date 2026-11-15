@@ -1,0 +1,27 @@
+# Main nav → page front matter (menu.main).
+# social → footer. headerBar → second chrome row (params.headerBar.enabled).
+
+[[social]]
+    name    = "Tags"
+    pageRef = "/tags"
+    weight  = 10
+
+[[social]]
+    name    = "Categories"
+    pageRef = "/categories"
+    weight  = 20
+
+[[social]]
+    name    = "GitHub"
+    url     = "https://github.com/gaijinblog/engawa"
+    weight  = 30
+
+[[headerBar]]
+    name    = "Demo"
+    pageRef = "/categories/demo"
+    weight  = 10
+
+[[headerBar]]
+    name    = "Theme"
+    url     = "https://github.com/gaijinblog/engawa"
+    weight  = 20

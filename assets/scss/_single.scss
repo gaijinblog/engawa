@@ -1,0 +1,346 @@
+.article-header {
+    margin-bottom: var(--space-6);
+}
+
+.article-header__title {
+    margin-bottom: var(--space-4);
+}
+
+.article-header__cover {
+    margin: 0 0 var(--space-6);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-muted);
+
+    img {
+        width: 100%;
+        max-height: 28rem;
+        object-fit: cover;
+    }
+}
+
+// Summary lead on post pages — slightly larger, sits inline as a plain paragraph
+.article-summary {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-accent);
+    margin: 0 0 var(--space-5);
+    padding: 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+}
+
+// Post meta panel — soft block for date, category, reading time, tags, languages
+.post-meta-block {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0 0 var(--space-5);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-secondary);
+    // Sized relative to the meta panel itself (not the viewport).
+    container-type: inline-size;
+    container-name: post-meta;
+}
+
+// Facts row: date left · categories center · reading time right.
+// Categories are a single group (not interleaved items). Below ~28rem of panel
+// width the whole group moves to the next line, still centered — never
+// word-by-word between date and reading time.
+.post-meta-block__facts {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--space-3);
+    row-gap: var(--space-2);
+    width: 100%;
+}
+
+.post-meta-block__item {
+    display: inline-flex;
+    align-items: center;
+    color: var(--color-text-muted);
+    line-height: 1.4;
+    min-width: 0;
+
+    time {
+        font-variant-numeric: tabular-nums;
+        color: var(--color-text-secondary);
+    }
+}
+
+.post-meta-block__item--date {
+    grid-column: 1;
+    grid-row: 1;
+    justify-self: start;
+}
+
+.post-meta-block__item--rt {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    text-align: right;
+}
+
+// Only date + RT (no categories): still pin to the ends.
+.post-meta-block__facts:not(:has(.post-meta-block__cats)) {
+    grid-template-columns: 1fr 1fr;
+
+    .post-meta-block__item--rt {
+        grid-column: 2;
+    }
+}
+
+// Only one of date/RT present: don’t stretch oddly.
+.post-meta-block__facts:not(:has(.post-meta-block__item--date)):not(:has(.post-meta-block__cats)) {
+    grid-template-columns: 1fr;
+
+    .post-meta-block__item--rt {
+        grid-column: 1;
+        justify-self: end;
+    }
+}
+
+.post-meta-block__facts:not(:has(.post-meta-block__item--rt)):not(:has(.post-meta-block__cats)) {
+    grid-template-columns: 1fr;
+
+    .post-meta-block__item--date {
+        grid-column: 1;
+    }
+}
+
+.post-meta-block__cats {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    gap: 0.15em 0.35em;
+    max-width: 100%;
+    line-height: 1.4;
+    color: var(--color-text-muted);
+}
+
+.post-meta-block__cats-sep {
+    color: var(--color-border-strong);
+    font-weight: 400;
+    user-select: none;
+}
+
+.post-meta-block__cat {
+    color: var(--color-accent);
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Narrow meta panel: keep date | reading time on row 1; categories as a full
+// centered block on row 2 (same panel, no extra separator line).
+@container post-meta (max-width: 28rem) {
+    .post-meta-block__facts:has(.post-meta-block__cats) {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .post-meta-block__facts:has(.post-meta-block__cats) .post-meta-block__item--date {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .post-meta-block__facts:has(.post-meta-block__cats) .post-meta-block__item--rt {
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: end;
+    }
+
+    .post-meta-block__facts:has(.post-meta-block__cats) .post-meta-block__cats {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        justify-self: center;
+    }
+
+    // Date missing but cats + RT present
+    .post-meta-block__facts:has(.post-meta-block__cats):not(:has(.post-meta-block__item--date)) {
+        grid-template-columns: 1fr;
+
+        .post-meta-block__item--rt {
+            grid-column: 1;
+            grid-row: 1;
+            justify-self: end;
+        }
+
+        .post-meta-block__cats {
+            grid-column: 1;
+            grid-row: 2;
+        }
+    }
+
+    // RT missing but date + cats present
+    .post-meta-block__facts:has(.post-meta-block__cats):not(:has(.post-meta-block__item--rt)) {
+        grid-template-columns: 1fr;
+
+        .post-meta-block__item--date {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .post-meta-block__cats {
+            grid-column: 1;
+            grid-row: 2;
+        }
+    }
+}
+
+// Inner separator above tags/langs is drawn in _separators.scss
+.post-meta-block__tags,
+.post-meta-block__langs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2);
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+}
+
+.post-meta-block__label {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin-right: var(--space-1);
+    flex-shrink: 0;
+}
+
+.post-meta-block__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.post-meta-block__chip {
+    display: inline-block;
+    font-size: var(--text-xs);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: 0.2em 0.65em;
+    border: 1px solid var(--color-border);
+    border-radius: var(--chip-radius, 999px);
+    background: var(--color-surface);
+    transition: border-color var(--transition), color var(--transition), background var(--transition);
+
+    &:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+        background: var(--color-accent-soft);
+        text-decoration: none;
+    }
+}
+
+.post-meta-block__chip--lang {
+    border-color: color-mix(in srgb, var(--color-accent) 35%, var(--color-border));
+    color: var(--color-accent);
+}
+
+// Legacy list cards (home / summaries) still use .post-meta
+.post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-4);
+
+    a {
+        color: var(--color-text-secondary);
+        text-decoration: none;
+
+        &:hover {
+            color: var(--color-accent);
+        }
+    }
+
+    time {
+        font-variant-numeric: tabular-nums;
+    }
+}
+
+.post-meta__sep::before {
+    content: "·";
+    margin-right: var(--space-4);
+    color: var(--color-border-strong);
+}
+
+// Context separator above footer is drawn in _separators.scss
+.article-footer {
+    margin-top: var(--space-8);
+    padding-top: var(--space-5);
+    font-family: var(--font-sans);
+}
+
+.post-nav {
+    display: grid;
+    gap: var(--space-4);
+    margin-top: var(--space-6);
+
+    @media (min-width: 640px) {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+.post-nav__link {
+    display: block;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    text-decoration: none;
+    transition: border-color var(--transition), box-shadow var(--transition);
+
+    &:hover {
+        border-color: var(--color-accent);
+        box-shadow: var(--shadow-sm);
+        text-decoration: none;
+    }
+
+    .label {
+        display: block;
+        font-size: var(--text-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--color-text-muted);
+        margin-bottom: var(--space-1);
+    }
+
+    .title {
+        font-family: var(--font-serif);
+        font-size: var(--text-sm);
+        color: var(--color-text);
+        line-height: var(--leading-tight);
+    }
+
+    &--next {
+        text-align: right;
+
+        @media (max-width: 639px) {
+            text-align: left;
+        }
+    }
+}
+
+// TOC styles live in _toc.scss

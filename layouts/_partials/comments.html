@@ -1,0 +1,20 @@
+{{- $enabled := default true .Site.Params.comments.enabled -}}
+{{- if isset .Params "comments" }}{{ $enabled = .Params.comments }}{{ end -}}
+{{- if and $enabled .IsPage (eq .Type "post") (not .Draft) -}}
+  {{- $provider := default "disqus" .Site.Params.comments.provider -}}
+<section class="comments" id="comments">
+  <h2 class="comments__title">{{ i18n "article.comments" }}</h2>
+  {{- /*
+    comments__bay   — scheme chrome (loud for moe/mecha; quiet for light/dark/showa/ghost;
+                      nearly invisible for ajisai which already has a white content column)
+    comments__panel — solid light/dark host for Disqus (padding so text never kisses borders)
+  */ -}}
+  <div class="comments__bay">
+    <div class="comments__panel">
+      {{- if eq $provider "disqus" -}}
+        {{- partial "comments/disqus.html" . -}}
+      {{- end -}}
+    </div>
+  </div>
+</section>
+{{- end -}}

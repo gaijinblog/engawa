@@ -1,0 +1,27 @@
+{{- if hugo.IsMultilingual -}}
+  {{- $page := . -}}
+  {{- /* Summary: primary subtag only (pt-br → pt, zh-hant → zh). Full Lang stays for URLs/hreflang. */ -}}
+  {{- $summaryCode := index (split .Language.Lang "-") 0 -}}
+<details class="lang-switcher">
+  <summary title="{{ i18n "lang.switch" }}">{{ $summaryCode }}</summary>
+  <div class="lang-switcher__menu" role="list">
+    {{- range .Site.Home.AllTranslations }}
+      {{- $lang := .Language -}}
+      {{- $target := . -}}
+      {{- range $page.AllTranslations }}
+        {{- if eq .Lang $lang.Lang }}
+          {{- $target = . -}}
+        {{- end }}
+      {{- end }}
+      {{- $label := $lang.Lang -}}
+      {{- with $lang.Label }}{{ $label = . }}{{ end -}}
+      <a
+        role="listitem"
+        href="{{ $target.RelPermalink }}"
+        hreflang="{{ $lang.Lang }}"
+        {{ if eq $lang.Lang $page.Lang }}class="is-active" aria-current="true"{{ end }}
+      >{{ $label }}</a>
+    {{- end }}
+  </div>
+</details>
+{{- end -}}

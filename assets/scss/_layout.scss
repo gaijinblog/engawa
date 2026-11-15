@@ -1,0 +1,90 @@
+.site {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.site-main {
+    flex: 1;
+    width: 100%;
+    max-width: var(--layout-max);
+    margin: 0 auto;
+    padding: var(--space-6) var(--space-5) var(--space-8);
+}
+
+.layout {
+    display: grid;
+    gap: var(--space-7);
+    // start: sidebar box is content-sized; grid row still as tall as main → sticky works
+    align-items: start;
+    width: 100%;
+
+    @media (min-width: 960px) {
+        grid-template-columns: minmax(0, 1fr) var(--sidebar-width);
+        gap: var(--space-8);
+    }
+}
+
+// sidebar: false — single content column (no aside).
+// Default: keep the same usable width as the content column *with* a sidebar
+// (layout-max minus sidebar column and grid gap), centered in .site-main.
+// Opt-in fullWidth: true → .layout--full-width expands into the freed space.
+.layout--no-sidebar {
+    @media (min-width: 960px) {
+        grid-template-columns: minmax(0, 1fr);
+        // Mirror the with-sidebar content column: full main max − sidebar − gap
+        // (.site-main already applies horizontal padding.)
+        max-width: calc(var(--layout-max) - 2 * var(--space-5) - var(--sidebar-width) - var(--space-8));
+        margin-inline: auto;
+    }
+}
+
+// fullWidth: true + no sidebar — claim full .site-main and widen body measure
+// so prose uses the former sidebar band instead of leaving empty space.
+.layout--no-sidebar.layout--full-width {
+    @media (min-width: 960px) {
+        max-width: none;
+        margin-inline: 0;
+        width: 100%;
+
+        .prose,
+        .article-summary {
+            max-width: calc(var(--measure) + var(--sidebar-width) + var(--space-8));
+        }
+    }
+}
+
+.layout__content {
+    min-width: 0;
+    width: 100%;
+}
+
+.layout__sidebar {
+    min-width: 0;
+
+    @media (min-width: 960px) {
+        // Sticky in the page flow: does not scroll with posts; parks under chrome;
+        // unsticks when the layout ends so the footer can scroll into view.
+        // top = header stack height + .site-main top padding, which is exactly the
+        // sidebar's natural offset at scroll 0 — so it never drifts toward/under the
+        // translucent header while scrolling (only the content column scrolls).
+        // --header-stack-height is set by CSS (:root / :has) and refined in JS
+        // (main + optional utility bar). Never set overflow/max-height here — that
+        // creates a nested scrollbar.
+        position: sticky;
+        top: calc(var(--header-stack-height) + var(--space-6));
+    }
+}
+
+// When sidebar stacks below on mobile, order content first
+@media (max-width: 959px) {
+    .layout__content {
+        order: 1;
+    }
+
+    .layout__sidebar {
+        order: 2;
+        padding-top: var(--space-4);
+        border-top: 1px solid var(--color-border);
+    }
+}

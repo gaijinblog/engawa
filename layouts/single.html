@@ -1,0 +1,50 @@
+{{ define "main" }}
+<article class="article">
+  <header class="article-header">
+    <h1 class="article-header__title">{{ .Title }}</h1>
+
+    {{- if eq .Type "post" }}
+      {{- partial "post-meta-block.html" . -}}
+    {{- end }}
+
+    {{- with .Params.image }}
+      {{- $res := $.Resources.GetMatch . -}}
+      {{- $remote := or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "//") -}}
+      <div class="article-header__cover">
+        {{- if $res }}
+          {{- $img := $res.Resize "1200x" -}}
+          <img src="{{ $img.RelPermalink }}" alt="{{ $.Title }}" width="{{ $img.Width }}" height="{{ $img.Height }}">
+        {{- else if $remote }}
+          <img src="{{ . | safeURL }}" alt="{{ $.Title }}">
+        {{- else }}
+          <img src="{{ . | relURL }}" alt="{{ $.Title }}">
+        {{- end }}
+      </div>
+    {{- end }}
+  </header>
+
+  {{- /* Friend links page (params.links) */ -}}
+  {{- if .Params.links }}
+    {{- partial "links.html" . -}}
+  {{- end }}
+
+  {{- /* TOC in content column, before body — not in sidebar (mobile-friendly) */ -}}
+  {{- if and (eq .Type "post") (default true .Site.Params.article.showToc) }}
+    {{- partial "toc.html" . -}}
+  {{- end }}
+
+  {{- /* Summary lead — frontmatter summary rendered as a slightly larger paragraph */ -}}
+  {{- with .Params.summary }}
+    <p class="article-summary">{{ . }}</p>
+  {{- end }}
+
+  <div class="prose">
+    {{ .Content }}
+  </div>
+
+  {{- if eq .Type "post" }}
+    {{- partial "post-footer.html" . -}}
+    {{- partial "comments.html" . -}}
+  {{- end }}
+</article>
+{{ end }}

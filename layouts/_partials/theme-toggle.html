@@ -1,0 +1,44 @@
+{{- /*
+
+  Theme dropdown (same UX as language switcher).
+
+  Selectable prefs come from params: `auto` (system) is always available, plus
+  every name in `params.colorScheme.schemes`. Core schemes (light/dark) have
+  built-in sun/moon icons + i18n labels; site-owned schemes provide an icon
+  via `partials/scheme-icons/<name>.html` and a `theme.<name>` i18n key
+  (falls back to the humanized scheme name).
+*/ -}}
+{{- $schemes := default (slice "light" "dark") .Site.Params.colorScheme.schemes -}}
+<details class="theme-switcher lang-switcher">
+  <summary title="{{ i18n "theme.toggle" }}" data-theme-summary aria-label="{{ i18n "theme.toggle" }}">
+    <span class="theme-switcher__icon" data-theme-summary-icon aria-hidden="true">
+
+      {{/* auto → half-sun; light → sun; dark → moon; custom schemes → site partial icon (CSS shows it) */}}
+      <svg class="icon-auto" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/><path d="M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" opacity=".35"/></svg>
+      <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+      <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 14.5A8.5 8.5 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>
+      {{- range $schemes }}
+      {{- $icon := printf "scheme-icons/%s" . }}
+      {{- if templates.Exists (printf "partials/%s.html" $icon) }}
+      {{ partial $icon $ }}
+      {{- end }}
+      {{- end }}
+
+    </span>
+
+    <span class="theme-switcher__label" data-theme-summary-label>Auto</span>
+  </summary>
+
+  <div class="lang-switcher__menu theme-switcher__menu" role="list">
+    <button type="button" role="listitem" class="theme-switcher__option" data-theme-set="auto">
+      {{ i18n "theme.auto" }}
+    </button>
+    {{- range $schemes }}
+    {{- $label := i18n (printf "theme.%s" .) }}
+    {{- if not $label }}{{ $label = . | humanize }}{{ end }}
+    <button type="button" role="listitem" class="theme-switcher__option" data-theme-set="{{ . }}">
+      {{ $label }}
+    </button>
+    {{- end }}
+  </div>
+</details>

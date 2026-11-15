@@ -1,0 +1,21 @@
+{{- $alert := "" -}}
+{{- with .Attributes.class }}{{ $alert = . }}{{ end -}}
+{{- /* Hugo alert blockquotes (note/tip/etc.). Labels follow the page language
+     via i18n `alert.<type>`; falls back to the English title-case label when
+     a translation is missing. Custom titles always win. */ -}}
+{{- if .AlertType }}
+{{- $label := i18n (printf "alert.%s" .AlertType) -}}
+{{- if not $label }}{{ $label = .AlertType | title }}{{ end -}}
+<blockquote class="alert alert-{{ .AlertType }}">
+  {{- with .AlertTitle }}
+    <p><strong>{{ . }}</strong></p>
+  {{- else }}
+    <p><strong>{{ $label }}</strong></p>
+  {{- end }}
+  {{ .Text | safeHTML }}
+</blockquote>
+{{- else }}
+<blockquote{{ with $alert }} class="{{ . }}"{{ end }}>
+  {{ .Text | safeHTML }}
+</blockquote>
+{{- end -}}

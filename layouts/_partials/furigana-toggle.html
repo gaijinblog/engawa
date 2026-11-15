@@ -1,0 +1,20 @@
+{{- /*
+  Furigana mode: off | hiragana | romaji (site-wide; persisted in localStorage).
+  Summary glyphs (like size S/M/L, lang pt/en): ⊘ off · あ hiragana · A romaji
+*/ -}}
+<details class="furigana-switcher lang-switcher">
+  <summary title="{{ i18n "furigana.toggle" }}" data-furigana-summary aria-label="{{ i18n "furigana.toggle" }}">
+    <span data-furigana-summary-label>⊘</span>
+  </summary>
+  <div class="lang-switcher__menu furigana-switcher__menu" role="list">
+    <button type="button" role="listitem" class="furigana-switcher__option" data-furigana-set="off">
+      ⊘ {{ i18n "furigana.off" }}
+    </button>
+    <button type="button" role="listitem" class="furigana-switcher__option" data-furigana-set="hiragana">
+      あ {{ i18n "furigana.hiragana" }}
+    </button>
+    <button type="button" role="listitem" class="furigana-switcher__option" data-furigana-set="romaji">
+      A {{ i18n "furigana.romaji" }}
+    </button>
+  </div>
+</details>

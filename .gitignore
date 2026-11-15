@@ -1,0 +1,33 @@
+# Hugo build output (exampleSite — run from that folder with --themesDir ../..)
+exampleSite/public/
+exampleSite/resources/
+exampleSite/.hugo_build.lock
+
+# Accidental builds from the theme root
+/public/
+/resources/
+.hugo_build.lock
+cache/
+
+# Node / package managers (if used for tooling)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# OS
+.DS_Store
+Thumbs.db
+.env
+.env.local
+
+# Logs / temp
+*.log
+*.tmp
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

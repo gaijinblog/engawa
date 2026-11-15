@@ -1,0 +1,22 @@
+<footer class="article-footer">
+  {{- $prev := .PrevInSection -}}
+  {{- $next := .NextInSection -}}
+  {{- if or $prev $next }}
+  <nav class="post-nav" aria-label="Post navigation">
+    {{- with $prev }}
+    <a class="post-nav__link post-nav__link--prev" href="{{ .RelPermalink }}">
+      <span class="label">{{ i18n "article.previous" }}</span>
+      <span class="title">{{ .Title }}</span>
+    </a>
+    {{- else }}
+    <span></span>
+    {{- end }}
+    {{- with $next }}
+    <a class="post-nav__link post-nav__link--next" href="{{ .RelPermalink }}">
+      <span class="label">{{ i18n "article.next" }}</span>
+      <span class="title">{{ .Title }}</span>
+    </a>
+    {{- end }}
+  </nav>
+  {{- end }}
+</footer>

@@ -1,0 +1,27 @@
+{{- $current := "compact" -}}
+<details class="size-switcher lang-switcher">
+  <summary title="{{ i18n "contentSize.label" }}" data-content-size-label>
+    {{- /* label updated by JS; default Compact short */ -}}
+    S
+  </summary>
+  <div class="lang-switcher__menu" role="list">
+    <button
+      type="button"
+      role="listitem"
+      class="size-switcher__option"
+      data-content-size-set="compact"
+    >{{ i18n "contentSize.compact" }} (S)</button>
+    <button
+      type="button"
+      role="listitem"
+      class="size-switcher__option"
+      data-content-size-set="comfort"
+    >{{ i18n "contentSize.comfort" }} (M)</button>
+    <button
+      type="button"
+      role="listitem"
+      class="size-switcher__option"
+      data-content-size-set="large"
+    >{{ i18n "contentSize.large" }} (L)</button>
+  </div>
+</details>

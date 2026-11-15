@@ -1,0 +1,67 @@
+{{- /*
+  Author avatar — photo (framed image) or mark (mon/logo silhouette).
+
+  Params (author):
+    avatar        string   default image path
+    avatarStyle   string   "photo" (default) | "mark"
+    avatarColor   string   mark only: "text" (default) | "accent"
+    avatarSize    string   "fixed" (default) | "fill" (near full sidebar width)
+    avatarColors  map      optional per-scheme color overrides (text | accent)
+    avatars       map      optional per-scheme art overrides
+                           keys: light, dark, moe, mecha, showa, ghost, ajisai
+*/ -}}
+{{- $style := default "photo" .Site.Params.author.avatarStyle -}}
+{{- $color := default "text" .Site.Params.author.avatarColor -}}
+{{- if and (ne $color "text") (ne $color "accent") }}{{ $color = "text" }}{{ end -}}
+{{- $size := default "fixed" .Site.Params.author.avatarSize -}}
+{{- if and (ne $size "fixed") (ne $size "fill") }}{{ $size = "fixed" }}{{ end -}}
+{{- $default := .Site.Params.author.avatar -}}
+{{- if not $default }}{{ $default = .Site.Params.favicon }}{{ end -}}
+{{- $artOverrides := .Site.Params.author.avatars | default dict -}}
+{{- $colorOverrides := .Site.Params.author.avatarColors | default dict -}}
+{{- $schemes := slice "light" "dark" "moe" "mecha" "showa" "ghost" "ajisai" -}}
+{{- $name := default "Author" .Site.Params.author.name -}}
+{{- $baseClass := printf "sidebar-author__avatar sidebar-author__avatar--size-%s" $size -}}
+{{- $tokenFor := dict "text" "var(--color-text)" "accent" "var(--color-accent)" -}}
+
+{{- if $default }}
+  {{- $vars := slice (printf "--avatar-src: url(%s)" ($default | relURL)) -}}
+  {{- $vars = $vars | append (printf "--avatar-fill: %s" (index $tokenFor $color)) -}}
+  {{- range $scheme := $schemes }}
+    {{- with index $artOverrides $scheme }}
+      {{- $vars = $vars | append (printf "--avatar-src-%s: url(%s)" $scheme (. | relURL)) -}}
+    {{- end }}
+    {{- with index $colorOverrides $scheme }}
+      {{- $c := . -}}
+      {{- if or (eq $c "text") (eq $c "accent") }}
+        {{- $vars = $vars | append (printf "--avatar-fill-%s: %s" $scheme (index $tokenFor $c)) -}}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- $styleAttr := delimit $vars "; " -}}
+
+  {{- if eq $style "mark" }}
+<span
+  class="{{ $baseClass }} sidebar-author__avatar--mark"
+  role="img"
+  aria-label="{{ $name }}"
+  style="{{ $styleAttr | safeCSS }}"
+></span>
+  {{- else if $artOverrides }}
+<span
+  class="{{ $baseClass }} sidebar-author__avatar--photo"
+  role="img"
+  aria-label="{{ $name }}"
+  style="{{ $styleAttr | safeCSS }}"
+></span>
+  {{- else }}
+<img
+  class="{{ $baseClass }} sidebar-author__avatar--photo"
+  src="{{ $default | relURL }}"
+  alt="{{ $name }}"
+  width="128"
+  height="128"
+  loading="lazy"
+>
+  {{- end }}
+{{- end -}}

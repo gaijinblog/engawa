@@ -1,0 +1,220 @@
+// =============================================================================
+// blogger — classic Blogspot / early-2000s blog look (site-owned scheme)
+// =============================================================================
+//
+// Full worked example for a site-owned scheme (exampleSite only — not shipped
+// in the theme). Light/Dark live in the theme's `_tokens.scss`; custom schemes
+// follow this shape. Sibling `_aurora.scss` is the minimal token+icon variant.
+//
+// To add another scheme (example slug: "aurora"):
+//   1. Copy this file → `assets/scss/_aurora.scss` and rename the slug
+//      (`blogger` → `aurora`) everywhere below, including the icon class.
+//   2. List it:  `[colorScheme] schemes = ["light", "dark", "blogger", "aurora"]`
+//      (add to `darkish` only if the background is dark — Disqus chrome).
+//   3. Import it from `assets/scss/_custom-schemes.scss`:
+//        @use "aurora";
+//      (that file overrides the theme's empty stub of the same name).
+//   4. Optional: `theme.aurora` in site `i18n/*.toml`, and
+//      `layouts/partials/scheme-icons/aurora.html` with `<svg class="icon-aurora">`.
+//   5. If you use faces beyond the theme default (Noto Sans JP + Source Serif 4),
+//      set `params.fonts.url` to a Google Fonts css2 URL that includes them.
+//      Map Furifont Sans/Serif under `[furifont.schemes]`.
+//
+// Section order (keep this when you fork):
+//   1 tokens · 2 separators · 3 surface + content panel · 4 accents · 5 switcher icon
+//
+// Content panel: when --color-bg ≠ the reading surface, wrap `.layout__content`
+// as a padded white column so prose never kisses the stage.
+// =============================================================================
+
+// --- 1. Tokens (same variables as `_tokens.scss`) ---
+// Gray stage, white paper column, Blogspot orange (#f60), Georgia / Arial.
+[data-theme="blogger"] {
+    --color-bg: #eeeeee;
+    --color-bg-elevated: #ffffff;
+    --color-bg-muted: #e4e4e4;
+    --color-surface: #ffffff;
+    --color-border: #cccccc;
+    --color-border-strong: #999999;
+
+    --color-text: #333333;
+    --color-text-secondary: #555555;
+    --color-text-muted: #777777;
+    --color-text-inverse: #ffffff;
+
+    // Signature Blogspot orange; hover darkens toward burnt orange
+    --color-accent: #ff6600;
+    --color-accent-hover: #e55c00;
+    --color-accent-soft: rgba(255, 102, 0, 0.12);
+    --color-vermillion: #cc0000;
+    --color-vermillion-soft: rgba(204, 0, 0, 0.1);
+
+    --color-code-bg: #f5f5f5;
+    --color-code-text: #333333;
+
+    --color-overlay: rgba(0, 0, 0, 0.55);
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.12);
+
+    // Early-web: nearly square
+    --radius-sm: 0.15rem;
+    --radius-md: 0.25rem;
+    --radius-lg: 0.35rem;
+    --chip-radius: 0.15rem;
+
+    // System classics + JP fallbacks already loaded by the theme default fonts URL
+    --font-sans: Arial, Helvetica, "Noto Sans JP", "Hiragino Sans", sans-serif;
+    --font-serif: Georgia, "Times New Roman", "Source Serif 4", "Noto Serif JP", serif;
+    --font-mono: "Courier New", Courier, "JetBrains Mono", monospace;
+
+    color-scheme: light;
+}
+
+// --- 2. Separators — dotted rules (classic blog <hr>) ---
+[data-theme="blogger"] {
+    --sep-inner-h: 1px;
+    --sep-inner-bg: repeating-linear-gradient(
+        to right,
+        var(--color-border-strong) 0,
+        var(--color-border-strong) 2px,
+        transparent 2px,
+        transparent 6px
+    );
+    --sep-inner-bg-size: 100% 1px;
+    --sep-inner-bg-pos: center;
+
+    --sep-context-h: 1px;
+    --sep-context-bg: repeating-linear-gradient(
+        to right,
+        var(--color-border-strong) 0,
+        var(--color-border-strong) 3px,
+        transparent 3px,
+        transparent 8px
+    );
+    --sep-context-bg-size: 100% 1px;
+    --sep-context-bg-pos: center;
+}
+
+// --- 3. Stage + white content panel (ajisai pattern) ---
+[data-theme="blogger"] {
+    body {
+        background-color: var(--color-bg);
+    }
+
+    // White reading column — padding keeps text/cards off the gray stage edge
+    .layout__content {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        padding: var(--space-5) var(--space-6);
+        box-sizing: border-box;
+
+        @media (max-width: 639px) {
+            padding: var(--space-4);
+        }
+    }
+
+    .layout__sidebar .sidebar-block {
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-sm);
+        padding: var(--space-4);
+    }
+}
+
+// --- 4. Light component accents ---
+[data-theme="blogger"] {
+    .site-header {
+        background: var(--color-surface);
+        border-bottom: 3px solid var(--color-accent);
+    }
+
+    .site-brand {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        color: var(--color-accent);
+        letter-spacing: 0;
+
+        &:hover {
+            color: var(--color-accent-hover);
+        }
+    }
+
+    // List posts live *inside* the white column — no per-item boxes (those
+    // kiss each other and fight the panel). Featured: soft wash + orange rail;
+    // summaries: open flow, dotted seps between them (see §2).
+    .post-featured {
+        border: 0;
+        border-left: 3px solid var(--color-accent);
+        border-radius: 0;
+        box-shadow: none;
+        background: var(--color-accent-soft);
+    }
+
+    .post-summary {
+        border: 0;
+        background: transparent;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .post-list {
+        gap: var(--space-2);
+    }
+
+    .post-featured__title,
+    .post-summary__title,
+    .page-header__title,
+    .article-header__title {
+        font-family: var(--font-serif);
+        font-weight: 700;
+    }
+
+    .prose {
+        font-family: var(--font-serif);
+    }
+
+    .prose a {
+        color: #0000cc; // classic blue hyperlink
+        text-decoration: underline;
+
+        &:hover {
+            color: var(--color-accent);
+        }
+    }
+
+    .site-footer {
+        background: var(--color-surface);
+        border-top: 1px solid var(--color-border);
+    }
+
+    // Comments already live in the white column
+    .comments__bay {
+        padding: 0;
+        background: transparent;
+        border: 0;
+    }
+
+    .comments__panel {
+        background-color: var(--color-surface);
+        color: var(--color-text);
+        color-scheme: light;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        padding: var(--space-5) var(--space-6);
+        box-shadow: none;
+
+        @media (max-width: 639px) {
+            padding: var(--space-4);
+        }
+    }
+}
+
+// --- 5. Theme-switcher icon (pair with layouts/partials/scheme-icons/blogger.html) ---
+[data-theme-pref="blogger"] .theme-switcher .icon-blogger {
+    display: block;
+    color: #ff6600;
+}
