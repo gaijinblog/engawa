@@ -1,0 +1,6 @@
+# Hugo version range for themes.gohugo.io / Hugo Modules consumers.
+# Extended is not required — SCSS uses Dart Sass on PATH.
+[module]
+  [module.hugoVersion]
+    extended = false
+    min = "0.157.0"

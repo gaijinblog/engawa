@@ -10,6 +10,10 @@ language (*ma* 間 — intentional empty space — paper & ink), multilingual UI
 built-in color schemes (plus an extension path for your own), Furifont
 furigana, modest search, Disqus, and comfortable image viewing.
 
+![Engawa light scheme](https://raw.githubusercontent.com/gaijinblog/engawa/main/images/light.jpg)
+
+![Engawa dark scheme](https://raw.githubusercontent.com/gaijinblog/engawa/main/images/dark.jpg)
+
 | | |
 | --- | --- |
 | **Furigana** | Rendered *by the font itself* (IVS ligatures) — no `<ruby>` DOM. Header toggle: Off / Hiragana / Romaji. |

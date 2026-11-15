@@ -3,7 +3,7 @@ license = "MIT"
 licenselink = "https://github.com/gaijinblog/engawa/blob/main/LICENSE"
 description = "A calm, reading-first Hugo theme for long-form blogs — soft Japanese design language, multilingual, light/dark schemes (site-owned schemes via _custom-schemes.scss)."
 homepage = "https://github.com/gaijinblog/engawa"
-demosite = "https://github.com/gaijinblog/engawa/tree/main/exampleSite"
+demosite = "https://gaijin.blog/"
 tags = ["blog", "responsive", "clean", "light", "dark", "multilingual", "personal", "reading", "furigana"]
 features = [
     "darkmode",
