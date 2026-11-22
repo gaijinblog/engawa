@@ -1,0 +1,41 @@
+// Math — display equations sit in a scrollable, token-styled panel.
+// No literal colors: core light/dark and every site-owned scheme supply their
+// own --color-* / --space-* / --radius-* tokens. MathML inherits currentColor.
+
+.math-display {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+
+  margin: var(--space-5) 0;
+  padding: var(--space-4);
+  background: var(--color-code-bg);
+  color: var(--color-code-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+
+  > .katex {
+    // `fit-content` + auto margins centers equations that fit. Using
+    // `max-content` here made the box wider than the actual MathML content,
+    // leaving phantom whitespace on both sides and a needless scrollbar.
+    display: block;
+    width: fit-content;
+    max-width: none;
+    margin-inline: auto;
+
+    // A block-level <math> fills its container when sizing the wrapper, which
+    // reintroduces that phantom width. Inline-block hugs the real equation;
+    // genuinely wide ones still overflow to the right and scroll.
+    > math {
+      display: inline-block;
+      max-width: none;
+    }
+  }
+}
+
+// Keep inline formulas from breaking across lines mid-expression.
+.katex math:not([display="block"]) {
+  white-space: nowrap;
+}

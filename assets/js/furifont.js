@@ -7,7 +7,7 @@
   var SCOPE =
     ".prose, .furigana-scope, .article-summary, .article-header__title, .term-header__title, .term-header__desc, .category-card__title, .category-card__desc, .terms-cloud__name, .post-summary__title, .post-summary__excerpt, .post-featured__title, .post-featured__excerpt, .post-nav__link .title, .link-card__title, .link-card__desc, .page-header__quote-text, .sidebar-author__bio, .tag-cloud > a, .site-nav a, .site-nav-mobile a, .header-bar__link, .site-header__actions .lang-switcher, .site-header__actions .theme-switcher, .site-header__actions .size-switcher, .site-header__actions .furigana-switcher";
   var SKIP =
-    "script,style,textarea,noscript,code,pre,kbd,ruby,[contenteditable]:not([contenteditable=false]),.post-meta-block,.toc,.tag-count,.terms-cloud__count,.category-card__count,.term-header__count,[data-furifont-reading]";
+    "script,style,textarea,noscript,code,pre,kbd,ruby,math,.katex,[contenteditable]:not([contenteditable=false]),.post-meta-block,.toc,.tag-count,.terms-cloud__count,.category-card__count,.term-header__count,[data-furifont-reading]";
 
   var pairsCache = null;
   var ivsCache = Object.create(null);

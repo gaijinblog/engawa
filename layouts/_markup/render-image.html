@@ -67,7 +67,7 @@
   {{- if default true site.Params.images.lightbox }} data-lightbox{{ end }}
   {{- if $lightboxCaption }} data-caption="{{ $lightboxCaption | plainify }}"{{ end }}
 >
-  {{- if $res }}
+  {{- if reflect.IsImageResourceProcessable $res }}
     {{- $full := $res -}}
     {{- if gt $res.Width 1400 }}
       {{- $full = $res.Resize "1400x" -}}
@@ -82,6 +82,15 @@
       alt="{{ $alt }}"
       width="{{ $display.Width }}"
       height="{{ $display.Height }}"
+      {{- if default true site.Params.images.lazy }} loading="lazy"{{ end }}
+      decoding="async"
+    >
+  {{- else if $res }}
+    {{- /* SVG and other non-processable resources: serve as-is, no dimensions. */ -}}
+    <img
+      src="{{ $res.RelPermalink }}"
+      data-full="{{ $res.RelPermalink }}"
+      alt="{{ $alt }}"
       {{- if default true site.Params.images.lazy }} loading="lazy"{{ end }}
       decoding="async"
     >

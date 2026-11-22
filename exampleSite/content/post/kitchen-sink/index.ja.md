@@ -40,8 +40,8 @@ Engawa 制作時に使っていた **マークアップ見本** を1本にまと
 
 ### H3
 #### H4
-##### H5 — アンカーなし・目次外
-###### H6 — アンカーなし・目次外
+##### H5 — 通常の見出し
+###### H6 — 通常の見出し
 
 ## 段落とインライン
 
@@ -51,7 +51,7 @@ Engawa 制作時に使っていた **マークアップ見本** を1本にまと
 
 ## 振り仮名
 
-振り仮名はテーマに組み込み（Furifont）。ヘッダー切替で Off / ひらがな / ローマ字を選べ、本文の日本語は自動注釈されます。手動の `<ruby>` は常に尊重され、自動パスで二重にはなりません:
+振り仮名はテーマに組み込み（Furifont）。ヘッダー切替で Off / ひらがな / ローマ字を選べ、本文の日本語は自動注釈されます。手動の `<ruby>` はそのまま保持されます:
 
 <ruby>東京<rt>とうきょう</rt></ruby>の<ruby>桜<rt>さくら</rt></ruby>はきれいです。
 
@@ -179,11 +179,18 @@ goldmark ネイティブの脚注。インライン参照[^note]し、記事末�
 
 ## 画像
 
-画像 — ローカルのページリソースでもリモート URL でも — は lightbox と遅延読み込み付きの `<figure>` になります。横幅 960px 以上のローカル画像は小さめの表示用コピー、1400px 以上は上限付きの全サイズコピーを自動生成します。この exampleSite では [placehold.co](https://placehold.co) のリモート URL のみ使います。
+画像 — ローカルのページリソースでもリモート URL でも — は lightbox と遅延読み込み付きの `<figure>` になります。横幅 960px 以上のローカル画像は小さめの表示用コピー、1400px 以上は上限付きの全サイズコピーを自動生成します。この exampleSite では主に [placehold.co](https://placehold.co) のリモート URL を使います。
 
 ### 単体の図
 
 ![960×540 プレースホルダー](https://placehold.co/960x540/c8d6e5/2c3e50?text=Figure)
+
+### SVG 画像
+
+ローカルの SVG ページリソースも使えます（リサイズせずそのまま配信）:
+
+![サンプルのフロー図](svg-sample.svg "フロー図")
+{.caption}
 
 ### キャプション（オプトイン）
 
@@ -239,31 +246,29 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 {{< gitlab 2349278 >}}
 
-## 未配線（構文サンプルとして保持）
+## 数式
 
-### Mermaid
+LaTeX は Hugo 内蔵の KaTeX エンジンでビルド時に描画されます。ブラウザには
+ネイティブの MathML と、テーマのトークンベースの表示数式パネルが届きます。
+ページ表示時に追加の読み込みはありません。`\(...\)` をインライン、
+`$$...$$` をブロックに書くだけで使えます。
 
-Engawa はまだ Mermaid JS を同梱していません。`mermaid` フェンスはふつうのコードブロックとして表示されます:
-
-```mermaid
-graph TD
-    A[開始] --> B[処理]
-    B --> C[終了]
-```
-
-### 数式
-
-KaTeX / MathJax も未導入のため、`$…$` も `$$…$$` もそのまま表示されます:
-
-インライン: `$ \varphi = \dfrac{1+\sqrt{5}}{2} $`
+インライン: \( \varphi = \dfrac{1+\sqrt{5}}{2} \)
 
 ブロック:
 
-```
 $$
 f(a) = \frac{1}{2\pi i} \oint_\gamma \frac{f(z)}{z-a}\, dz
 $$
-```
+
+長い表示数式は列からはみ出さず、スクロールできるパネルに収まります:
+
+$$
+\begin{aligned}
+\text{Total energy} &= \sum_{i=1}^{N} \left( \frac{1}{2}m_i v_i^{2} + m_i g h_i \right) + \int_{0}^{T} \left( F_{\mathrm{drag}}(t)\,v(t) + P_{\mathrm{engine}}(t) \right) \mathrm{d}t \\
+&= E_{\mathrm{kinetic}} + E_{\mathrm{potential}} + W_{\mathrm{nonconservative}} + Q_{\mathrm{thermal}}
+\end{aligned}
+$$
 
 ## この投稿の frontmatter
 
@@ -283,4 +288,3 @@ $$
 | `comments` | `false` でこの記事の Disqus 欄を非表示 |
 | `weight` | 同日投稿の並び替えタイブレーク |
 
-Engawa のレイアウトが読まない Hugo フィールド: `linkTitle`、`lastmod`（Hugo 内蔵サイトマップのみ使用）、`keywords`。害はありませんが、ページにもテーマにも使われていません。

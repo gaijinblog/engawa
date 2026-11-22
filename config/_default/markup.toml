@@ -16,6 +16,9 @@
 #   {caption=true} on the next line reach the image hook.
 # - tableOfContents — h2–h4, ordered (matches the TOC partial).
 # - highlight — CSS classes (not inline styles), line numbers on, guess syntax.
+# - passthrough — preserves LaTeX delimiters for the math render hook. No JS,
+#   CSS or fonts are shipped; MathML output needs no stylesheet. $...$ is
+#   intentionally not a delimiter so literal currency symbols are untouched.
 
 [goldmark.renderer]
 unsafe = true
@@ -26,6 +29,12 @@ wrapStandAloneImageWithinParagraph = false
 [goldmark.parser.attribute]
 block = true
 title = true
+
+[goldmark.extensions.passthrough]
+enable = true
+  [goldmark.extensions.passthrough.delimiters]
+  block  = [['\[', '\]'], ['$$', '$$']]
+  inline = [['\(', '\)']]
 
 [tableOfContents]
 startLevel = 2

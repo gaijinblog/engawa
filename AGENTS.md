@@ -2,7 +2,7 @@
 
 This directory is the **Engawa** Hugo theme, vendored in the gaijin_blog repo
 and also shipped standalone at https://github.com/gaijinblog/engawa. When
-vendored in-repo, edit it directly (it is not a Hugo module or submodule).
+vendored in-repo — edit it directly as part of this project.
 
 ## Read before working here
 
@@ -19,6 +19,13 @@ Never edit the bundled font binaries or their license files under
 
 ## Rules
 
+- **No negative documentation** — document what Engawa *does*, not what it
+  lacks. Never add sections, samples, or caveats about unsupported features
+  ("not bundled", "not wired", "no … yet", "no <engine> support") or describe
+  missing integrations. If a capability does not exist, leave it undocumented.
+  Describe shipped features, their usage, and their behavior; frame real
+  behavior positively (e.g. "wide equations scroll inside their panel", not
+  "there is no overflow handling").
 - **UI strings** — only from `i18n/*.toml`. Never hardcode chrome text in
   layouts or content.
 - **Site vs theme** — do not put site branding, content, or site-only config
@@ -65,7 +72,7 @@ not modify anything inside the theme directory afterwards.
    - add:
        [markup]
            _merge = 'deep'
-     (required — Hugo does not merge markup config from themes by default)
+     (required — Hugo needs explicit site opt-in for theme markup config)
    - add:
        [permalinks]
            post = "/p/:slug/"

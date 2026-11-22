@@ -1,0 +1,15 @@
+{{- /* LaTeX math, rendered at build time by Hugo's embedded KaTeX engine.
+       Default output is MathML, so no JS/fonts/third-party CSS are needed.
+       Change to `output = "htmlAndMathml"` in a site override if richer
+       typography is wanted — that needs a locally hosted KaTeX stylesheet. */ -}}
+{{- $isBlock := eq .Type "block" -}}
+{{- $opts := dict "displayMode" $isBlock -}}
+{{- with try (transform.ToMath .Inner $opts) }}
+  {{- with .Err }}
+    {{- errorf "Unable to render math: %s (see %s)" . $.Position -}}
+  {{- else }}
+    {{- if $isBlock }}<div class="math-display">{{ end }}
+    {{- .Value -}}
+    {{- if $isBlock }}</div>{{ end }}
+  {{- end -}}
+{{- end -}}

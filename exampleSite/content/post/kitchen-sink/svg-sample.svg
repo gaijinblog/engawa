@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80" role="img" aria-label="Sample flow diagram">
+  <rect x="1" y="21" width="70" height="38" rx="6" fill="#e8e4dc" stroke="#8a857c"/>
+  <rect x="169" y="21" width="70" height="38" rx="6" fill="#e8e4dc" stroke="#8a857c"/>
+  <path d="M71 40h98m-10-6 10 6-10 6" fill="none" stroke="#8a857c" stroke-width="2"/>
+  <text x="36" y="44" text-anchor="middle" font-family="sans-serif" font-size="12">Start</text>
+  <text x="204" y="44" text-anchor="middle" font-family="sans-serif" font-size="12">End</text>
+</svg>

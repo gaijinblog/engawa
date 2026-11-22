@@ -16,7 +16,7 @@ furigana, modest search, Disqus, and comfortable image viewing.
 
 | | |
 | --- | --- |
-| **Furigana** | Rendered *by the font itself* (IVS ligatures) — no `<ruby>` DOM. Header toggle: Off / Hiragana / Romaji. |
+| **Furigana** | Rendered *by the font itself* (IVS ligatures); hand-written `<ruby>` is preserved. Header toggle: Off / Hiragana / Romaji. |
 | **Color schemes** | Built-in: System, Light, Dark. Add site-owned schemes with config + one SCSS file each (see exampleSite for blogger / aurora). |
 | **Languages** | UI: English, 日本語, Português (BR), 简体中文, 繁體中文. Add another via a theme `i18n` file. |
 | **Content** | Heading anchors, GFM alerts, task lists, footnotes, ruby, lightbox + captions, galleries, video embeds |
@@ -24,7 +24,7 @@ furigana, modest search, Disqus, and comfortable image viewing.
 
 ## Requirements
 
-- Hugo ≥ 0.157.0 (Extended **not** required — SCSS uses Dart Sass)
+- Hugo ≥ 0.157.0 (standard edition works — SCSS uses Dart Sass)
 - [Dart Sass](https://sass-lang.com/dart-sass/) on `PATH` (`sass` binary):
   - macOS: `brew install dart-sass`
   - npm: `npm install -g sass`
@@ -64,8 +64,8 @@ theme = "hugo-theme-engawa"
 ### Markup merge (required)
 
 > [!IMPORTANT]
-> Hugo does **not** merge `markup` from themes by default. Opt in so the
-> theme's goldmark / TOC / highlight settings apply:
+> Hugo requires explicit site opt-in for theme `markup` config. Add this so
+> the theme's goldmark / TOC / highlight settings apply:
 
 ```toml
 [markup]
@@ -109,8 +109,8 @@ need to override the theme defaults in `config/_default/markup.toml`.
    [`config/_default/params.toml`](config/_default/params.toml) — copy only
    what you want to change.
 
-3. **Search page** — `content/page/search/index.md` (JSON output feeds the
-   sidebar widget; without it search stays inert):
+3. **Search page** — `content/page/search/index.md` (its JSON output feeds the
+   sidebar search widget):
 
    ```markdown
    ---
@@ -135,7 +135,7 @@ need to override the theme defaults in `config/_default/markup.toml`.
    ---
    ```
 
-5. **Main menu** — on each page you want in the nav (not in `menu.toml`):
+5. **Main menu** — in the front matter of each page you want in the nav:
 
    ```markdown
    menu:
@@ -146,8 +146,8 @@ need to override the theme defaults in `config/_default/markup.toml`.
    ```
 
 6. **Favicons** (optional) — place `favicon-32.png`, `favicon.ico`, and/or
-   `apple-touch-icon.png` in `static/img/`. Present files are emitted;
-   missing ones are skipped. `params.favicon` adds an SVG icon.
+   `apple-touch-icon.png` in `static/img/`. Files you provide are emitted
+   automatically; `params.favicon` adds an SVG icon.
 
 ## Configuration reference
 
@@ -185,7 +185,7 @@ page resources.
 - **`sidebar`** (default on) — `false` hides the sidebar and **auto-enables**
   the wide secondary footer unless `wideFooter: false`.
 - **`fullWidth`** — widens the content column; only with the sidebar off.
-- **`wideFooter`** — extra footer band; never shown together with the sidebar.
+- **`wideFooter`** — extra footer band, shown when the sidebar is off.
 
 ## Content features
 
@@ -204,7 +204,8 @@ From the theme's render hooks and `markup.toml` defaults:
 ### Images
 
 Every image (page resource or remote URL) becomes a `<figure>` with lightbox,
-lazy loading, and automatic resizing (960px display, 1400px full).
+lazy loading, and automatic resizing (960px display, 1400px full). Local SVG
+page resources are served as-is, without resizing.
 
 The `title` attribute always feeds the lightbox. On-page captions are opt-in —
 site-wide `images.showCaptions = true`, or per image:
@@ -235,13 +236,41 @@ Grids use the shortcode:
 | `gitlab` | `{{< gitlab SNIPPET_ID >}}` |
 | `gallery` | `cols="2"` (default) or `cols="3"` |
 
-Mermaid and math are not bundled — those fences render as plain code.
+### Math
+
+LaTeX is rendered at build time by Hugo's embedded KaTeX engine (`transform.ToMath`).
+The default output is browser-native MathML, so nothing is fetched by the reader's
+browser. The theme's own small `_math.scss` gives display equations a scrollable,
+token-styled panel.
+
+```markdown
+Inline \(a^2 + b^2 = c^2\), and a display equation:
+
+$$
+\int_0^1 x^2\,dx = \frac{1}{3}
+$$
+```
+
+- Inline `\(...\)`; display `$$...$$` or `\[...\]`. `$...$` is deliberately not a
+  delimiter, so literal currency symbols are untouched.
+- Enable math by writing it — detection is content-driven.
+- Inside `$$…$$`, begin each source line with math or text — leading `-`, `+`,
+  `*` or `1.` is Markdown list syntax.
+- Long display equations scroll inside their panel instead of overflowing the
+  column. Panel colors/spacing come from theme tokens, so every color scheme
+  is supported without per-scheme rules.
+- Invalid LaTeX fails the build with a file/line error. For softer behavior,
+  override `layouts/_markup/render-passthrough.html` in your site and pass
+  `throwOnError = false` to `transform.ToMath`.
+- For richer typography, override the same hook with `output = "htmlAndMathml"`
+  and host `katex.min.css` plus its fonts locally.
+- MathML text is excluded from Furifont annotation so `\text{日本語}` is safe.
 
 ## Multilingual
 
 - Content: `index.md` (default language) plus `index.<lang>.md` siblings.
 - UI strings: theme `i18n/*.toml` (en, ja, pt-br, zh, zh-hant-tw). Add a file
-  for a missing language; do not hardcode UI text in content.
+  for each language you use; keep UI text in i18n files.
 - Language chrome in the site's `languages.toml`:
 
   ```toml
@@ -281,7 +310,7 @@ Built-in and selectable in the header (localStorage):
 
 | Pref | Notes |
 | ---- | ----- |
-| `auto` | Follows system light/dark (always available; not listed in `schemes`) |
+| `auto` | Follows system light/dark (always available alongside `schemes`) |
 | `light` / `dark` | Core tokens in `assets/scss/_tokens.scss` |
 
 Site-owned schemes (any other slug) live in the *site's* `assets/scss/` and
@@ -312,7 +341,8 @@ Use any short slug of your own (examples below use `aurora`). Copy
 
 2. **SCSS** — copy the template to the site as `assets/scss/_aurora.scss`
    (rename the slug everywhere), then create site
-   `assets/scss/_custom-schemes.scss` (overrides the theme's empty stub):
+   `assets/scss/_custom-schemes.scss` (the theme provides a placeholder to
+   override):
 
    ```scss
    @use "aurora";
@@ -329,7 +359,7 @@ Use any short slug of your own (examples below use `aurora`). Copy
 ## Comments
 
 Disqus via `[services.disqus] shortname`. Per-post opt-out: `comments: false`.
-Drafts never render comments.
+Comments render on published pages only.
 
 ## Search
 
@@ -340,8 +370,8 @@ The sidebar widget reads the search page's JSON output (`data-search-index` in
 
 SCSS is compiled with Dart Sass (`css.Sass` / `transpiler: "dartsass"`),
 compressed and fingerprinted. Modules use `@use` in `assets/scss/main.scss`;
-`custom-schemes` loads last so site schemes win. A missing `sass` binary
-fails the build — see *Requirements*.
+`custom-schemes` loads last so site schemes win. The build needs `sass` on
+`PATH` — see *Requirements*.
 
 ## License
 

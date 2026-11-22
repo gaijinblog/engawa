@@ -14,7 +14,7 @@ layouts/_shortcodes/    gallery, quote, video, youtube, bilibili, tencent, gitla
 layouts/_partials/      Header, sidebar, footer, meta, TOC, comments, search,
                         theme/size/furigana/lang switchers, scheme-icons/
 assets/scss/            Tokens (_tokens.scss), components, _custom-schemes.scss
-                        (empty stub — site overrides with its own @use list;
+                        (placeholder for site overrides with their own @use list;
                         see exampleSite for blogger / aurora demos)
 assets/js/              main (theme/size), furifont, lightbox, search
 i18n/                   UI strings: en, ja, pt-br, zh, zh-hant-tw
@@ -38,7 +38,7 @@ Theme `config/_default/` merges into the site under Hugo's usual rules:
 | ------------ | -------- |
 | `sidebar` | Default on. `false` hides the aside and **enables** the wide secondary footer unless `wideFooter: false`. |
 | `fullWidth` | Widens the content column; only with sidebar off. |
-| `wideFooter` | Extra footer band (`footer-secondary.html`); never with sidebar. |
+| `wideFooter` | Extra footer band (`footer-secondary.html`), shown with the sidebar off. |
 
 Meta panel, TOC, summary lead, post nav, and comments render only for
 `type: "post"`. Comments skip drafts; on localhost a placeholder replaces the
@@ -46,7 +46,7 @@ Disqus embed.
 
 ## Furigana (Furifont) pipeline
 
-Furigana is drawn by the **font** (IVS glyph variants), not DOM `<rt>`:
+Furigana is drawn by the **font** (IVS glyph variants) as part of the typeface:
 
 1. **Config** — `params.furifont`: `enabled`, `default` mode
    (`off` / `hiragana` / `romaji`), `schemes` (color scheme → `sans` \| `serif`).
@@ -71,9 +71,32 @@ Important constants in `furifont.js` / `_furifont.scss`:
 
 `head.html` compiles `assets/scss/main.scss` with `css.Sass`
 (`transpiler: "dartsass"`, compressed, fingerprinted, integrity). Modules use
-`@use` (no `@import`). Near the end: `furifont`, `separators`, then
+`@use` modules. Near the end: `furifont`, `separators`, then
 `custom-schemes` (so site scheme overrides win over base components).
 Missing `sass` on `PATH` fails the build.
+
+## Math
+
+`layouts/_markup/render-passthrough.html` renders LaTeX with `transform.ToMath`
+(Hugo's embedded KaTeX) during the build. Delimiters live in `markup.toml`:
+`\( … \)` / `\[ … \]` / `$$ … $$`. Literal `$` in prose stays untouched.
+
+- `output` defaults to `mathml`, rendering entirely at build time — nothing is
+  fetched in the browser. A site override can use `htmlAndMathml` with a locally
+  hosted KaTeX stylesheet.
+- `displayMode` follows `.Type` (`"block"` vs inline). Display math is wrapped
+  in `<div class="math-display">`; `assets/scss/_math.scss` makes it a
+  token-styled, horizontally scrollable panel and is the only CSS math adds.
+  It uses only `--color-*`, `--space-*` and `--radius-*` tokens, so it follows
+  core light/dark and every site-owned scheme automatically.
+- Bad LaTeX fails the
+  build with a file/line message unless the site override sets
+  `throwOnError = false`.
+- Math is enabled by its presence in the content; pages without math pay no
+  cost.
+- `math` and `.katex` are in the `SKIP` list of `assets/js/furifont.js` so
+  Furifont leaves MathML text free of furigana spans. Keep them there when
+  editing `SKIP`.
 
 ## Color schemes
 

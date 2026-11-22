@@ -40,8 +40,8 @@ Six levels of section headings. On a post page, `h1` is the title; body copy typ
 
 ### H3
 #### H4
-##### H5 — no anchor, not in TOC
-###### H6 — no anchor, not in TOC
+##### H5 — plain heading
+###### H6 — plain heading
 
 ## Paragraphs and inline
 
@@ -51,7 +51,7 @@ Raw HTML is allowed (`goldmark.renderer.unsafe = true`), so inline markup such a
 
 ## Furigana
 
-Furigana is wired into the theme (Furifont): readers can switch the header toggle between Off / Hiragana / Romaji and Japanese text in the body gets annotated automatically. Manual `<ruby>` markup is always respected and never doubled by the automatic pass:
+Furigana is wired into the theme (Furifont): readers can switch the header toggle between Off / Hiragana / Romaji and Japanese text in the body gets annotated automatically. Manual `<ruby>` markup is kept as written:
 
 <ruby>東京<rt>とうきょう</rt></ruby>の<ruby>桜<rt>さくら</rt></ruby>はきれいです。
 
@@ -179,11 +179,18 @@ Below is more content after a thematic break (`hr` / context separator).
 
 ## Images
 
-All images — local page resources or remote URLs — become `<figure>` elements with the lightbox and lazy loading. Local files ≥960px wide get a smaller display copy, and ≥1400px ones a capped full-size copy. This exampleSite uses remote [placehold.co](https://placehold.co) URLs only.
+All images — local page resources or remote URLs — become `<figure>` elements with the lightbox and lazy loading. Local files ≥960px wide get a smaller display copy, and ≥1400px ones a capped full-size copy. Most samples here use remote [placehold.co](https://placehold.co) URLs.
 
 ### Single figure
 
 ![960×540 placeholder](https://placehold.co/960x540/c8d6e5/2c3e50?text=Figure)
+
+### SVG images
+
+Local SVG page resources work too — served as-is, without resizing:
+
+![Sample flow diagram](svg-sample.svg "Flow diagram")
+{.caption}
 
 ### Captions (opt-in)
 
@@ -239,31 +246,29 @@ Takes a `BV…` or `av…` ID, with an optional second page-number argument:
 
 {{< gitlab 2349278 >}}
 
-## Not wired up (kept as syntax samples)
+## Math
 
-### Mermaid
+LaTeX renders at build time with Hugo's embedded KaTeX engine. The browser gets
+native MathML and the theme's small token-styled panel for display equations —
+nothing is fetched at page-view time. Writing `\(...\)` inline or `$$...$$` for
+display is all it takes.
 
-Engawa has no Mermaid JS yet; `mermaid` fences render as a plain code block:
+Inline: \( \varphi = \dfrac{1+\sqrt{5}}{2} \)
 
-```mermaid
-graph TD
-    A[Start] --> B[Process]
-    B --> C[End]
-```
+Display:
 
-### Math
-
-No KaTeX/MathJax yet, so `$…$` and `$$…$$` stay literal:
-
-Inline: `$ \varphi = \dfrac{1+\sqrt{5}}{2} $`
-
-Block:
-
-```
 $$
 f(a) = \frac{1}{2\pi i} \oint_\gamma \frac{f(z)}{z-a}\, dz
 $$
-```
+
+Long display equations get a scrollable token-styled panel:
+
+$$
+\begin{aligned}
+\text{Total energy} &= \sum_{i=1}^{N} \left( \frac{1}{2}m_i v_i^{2} + m_i g h_i \right) + \int_{0}^{T} \left( F_{\mathrm{drag}}(t)\,v(t) + P_{\mathrm{engine}}(t) \right) \mathrm{d}t \\
+&= E_{\mathrm{kinetic}} + E_{\mathrm{potential}} + W_{\mathrm{nonconservative}} + Q_{\mathrm{thermal}}
+\end{aligned}
+$$
 
 ## Frontmatter used on this post
 
@@ -283,4 +288,3 @@ $$
 | `comments` | `false` hides the Disqus section for this post |
 | `weight` | Ordering tie-break among same-date posts |
 
-Hugo fields Engawa layouts never read: `linkTitle`, `lastmod` (only Hugo's built-in sitemap uses it), and `keywords` — harmless, but nothing on the page or in the theme consumes them.
